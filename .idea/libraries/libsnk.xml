@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="libsnk">
+    <CLASSES>
+      <root url="file://$USER_HOME$/Desktop/BOLT/libsnk/libsnk" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="file://$USER_HOME$/Desktop/BOLT/libsnk/libsnk" />
+    </SOURCES>
+    <jarDirectory url="file://$USER_HOME$/Desktop/BOLT/libsnk/libsnk" recursive="false" />
+    <jarDirectory url="file://$USER_HOME$/Desktop/BOLT/libsnk/libsnk" recursive="false" type="SOURCES" />
+  </library>
+</component>
