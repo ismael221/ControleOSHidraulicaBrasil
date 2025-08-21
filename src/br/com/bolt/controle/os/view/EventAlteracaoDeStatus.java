@@ -31,13 +31,16 @@ public class EventAlteracaoDeStatus implements EventoProgramavelJava {
         BigDecimal oldStatus = controleOsOldVo.asBigDecimal("STATUS");
         BigDecimal newStatus = controleOsNewdVo.asBigDecimal("STATUS");
 
-        String descOldStatus = historicoOsService.consultarDescricaoStatus(oldStatus);
-        String descNewStatus = historicoOsService.consultarDescricaoStatus(newStatus);
+        if (oldStatus.compareTo(newStatus) != 0) {
 
-        historicoOsService.salvarRegistro(descNewStatus, descOldStatus, numos, authInfo.getUserID());
+            String descOldStatus = historicoOsService.consultarDescricaoStatus(oldStatus);
+            String descNewStatus = historicoOsService.consultarDescricaoStatus(newStatus);
 
-        System.out.println("Uusário logado no beforeUpdate: " + authInfo.getName() + " " + authInfo.getUserID());
-        System.out.println("Status alterado de " + controleOsOldVo.asBigDecimal("STATUS") + " para -> " + controleOsNewdVo.asBigDecimal("STATUS"));
+            historicoOsService.salvarRegistro(descNewStatus, descOldStatus, numos, authInfo.getUserID());
+
+            System.out.println("Uusário logado no beforeUpdate: " + authInfo.getName() + " " + authInfo.getUserID());
+            System.out.println("Status alterado de " + controleOsOldVo.asBigDecimal("STATUS") + " para -> " + controleOsNewdVo.asBigDecimal("STATUS"));
+        }
 
     }
 
