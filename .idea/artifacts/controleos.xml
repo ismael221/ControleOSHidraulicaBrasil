@@ -1,6 +1,8 @@
 <component name="ArtifactManager">
   <artifact type="jar" name="controleos">
     <output-path>$PROJECT_DIR$/out/artifacts/controleos</output-path>
-    <root id="archive" name="controleos.jar" />
+    <root id="archive" name="controleos.jar">
+      <element id="module-output" name="ControleOSHidraulicaBrasil" />
+    </root>
   </artifact>
 </component>
