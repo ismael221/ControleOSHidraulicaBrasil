@@ -17,6 +17,7 @@ public class OSNumeroGeneratorService {
         System.out.println("Letra: " + letra);
         System.out.println("Ano: " + ano);
         System.out.println("Sequencias: " + sequencias.toString());
+        System.out.println("Chave " + ano + letra);
 
         int ultimoNumero = sequencias.getOrDefault(ano, 0);
 

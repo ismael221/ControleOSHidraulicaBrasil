@@ -23,7 +23,7 @@ public class NumeroOsRepository {
         NativeSql sql = null;
         ResultSet rset = null;
         JapeSession.SessionHandle hnd = null;
-        int ano = Year.now().getValue();
+        int anoAtual = Year.now().getValue();
         Map<Integer, Integer> sequencias = new HashMap<>();
 
         try {
@@ -35,16 +35,22 @@ public class NumeroOsRepository {
 
             sql = new NativeSql(jdbc);
 
-            sql.appendSql("SELECT DISTINCT NUOS FROM AD_CONTROLEOS ORDER BY NUOS DESC");
+            sql.appendSql("SELECT DISTINCT NUOS FROM AD_CONTROLEOS WHERE NUOS IS NOT NULL ORDER BY NUOS DESC");
 
             rset = sql.executeQuery();
 
+            int maiorNumero = 0;
             while (rset.next()) {
                 String valor = rset.getString("NUOS");
-                String numeros = valor.replaceAll(".*[A-Za-z](\\d+)", "$1");
-                int numero = Integer.parseInt(numeros);
-                sequencias.put(ano, numero);
+                if (valor != null && valor.length() >= 5) {
+                    String numeros = valor.substring(5); // pega só os 6 dígitos
+                    int numero = Integer.parseInt(numeros);
+                    if (numero > maiorNumero) {
+                        maiorNumero = numero;
+                    }
+                }
             }
+            sequencias.put(anoAtual, maiorNumero);
 
         } catch (Exception e) {
             Utils.logarErro(e);
