@@ -21,7 +21,6 @@ public class HistoricoOsService {
 
     public void salvarRegistro(String novoStatus, String statusOld, BigDecimal numos, BigDecimal codUsu) throws MGEModelException {
         HistoricoOs historicoOs = historicoOsRepository.consultarHistorico(numos);
-        String descricao = "";
 
         if (historicoOs == null || novoStatus.isEmpty()) {
             historicoOs = new HistoricoOs();
@@ -33,7 +32,11 @@ public class HistoricoOsService {
             historicoOs.setDtAlter(Timestamp.from(Instant.now()));
             historicoOs.setCodUsu(codUsu);
             historicoOs.setIdOS(numos);
-            historicoOs.setDescricao("De " + statusOld + " -> Para " + novoStatus);
+            if (statusOld == null || statusOld.isEmpty()) {
+                historicoOs.setDescricao("Criação da OS");
+            }else{
+                historicoOs.setDescricao("De " + statusOld + " -> Para " + novoStatus);
+            }
         }
         historicoOsRepository.salvarHistorico(historicoOs);
     }

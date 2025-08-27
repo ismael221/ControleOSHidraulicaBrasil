@@ -9,6 +9,7 @@ import br.com.sankhya.modelcore.auth.AuthenticationInfo;
 import br.com.sankhya.ws.ServiceContext;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 
 public class EventAlteracaoDeStatus implements EventoProgramavelJava {
 
@@ -31,7 +32,7 @@ public class EventAlteracaoDeStatus implements EventoProgramavelJava {
         BigDecimal oldStatus = controleOsOldVo.asBigDecimal("STATUS");
         BigDecimal newStatus = controleOsNewdVo.asBigDecimal("STATUS");
 
-        if (oldStatus.compareTo(newStatus) != 0) {
+        if (!Objects.equals(oldStatus, newStatus)) {
 
             String descOldStatus = historicoOsService.consultarDescricaoStatus(oldStatus);
             String descNewStatus = historicoOsService.consultarDescricaoStatus(newStatus);
