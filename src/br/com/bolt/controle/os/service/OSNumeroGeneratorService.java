@@ -1,21 +1,26 @@
 package br.com.bolt.controle.os.service;
 
+import br.com.bolt.controle.os.repository.NumeroOsRepository;
+
 import java.time.Year;
-import java.util.HashMap;
 import java.util.Map;
 
 public class OSNumeroGeneratorService {
 
-    private static final Map<Integer, Integer> sequencias = new HashMap<>();
+    private static final NumeroOsRepository numeroOsRepository = new NumeroOsRepository();
 
     public static synchronized String gerarNumero(String letra) {
         int ano = Year.now().getValue();
 
+        Map<Integer, Integer> sequencias = numeroOsRepository.consultarUltimoNumero();
+
+        System.out.println("Letra: " + letra);
+        System.out.println("Ano: " + ano);
+        System.out.println("Sequencias: " + sequencias.toString());
+
         int ultimoNumero = sequencias.getOrDefault(ano, 0);
 
         ultimoNumero++;
-
-        sequencias.put(ano, ultimoNumero);
 
         return ano + letra + String.format("%06d", ultimoNumero);
     }
