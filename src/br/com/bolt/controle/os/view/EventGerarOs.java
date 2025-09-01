@@ -1,8 +1,14 @@
 package br.com.bolt.controle.os.view;
 
+import br.com.bolt.controle.os.model.OrdemDeServico;
+import br.com.bolt.controle.os.repository.OrdemDeServicoRepository;
 import br.com.sankhya.extensions.eventoprogramavel.EventoProgramavelJava;
 import br.com.sankhya.jape.event.PersistenceEvent;
 import br.com.sankhya.jape.event.TransactionContext;
+import br.com.sankhya.jape.vo.DynamicVO;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 public class EventGerarOs implements EventoProgramavelJava {
 
@@ -28,6 +34,20 @@ public class EventGerarOs implements EventoProgramavelJava {
 
     @Override
     public void afterUpdate(PersistenceEvent event) throws Exception {
+        DynamicVO cabecalhoVO = (DynamicVO) event.getVo();
+        OrdemDeServicoRepository ordemDeServicoRepository = new OrdemDeServicoRepository();
+        BigDecimal nunota = cabecalhoVO.asBigDecimal("NUNOTA");
+        BigDecimal codParc = cabecalhoVO.asBigDecimal("CODPARC");
+
+        List<OrdemDeServico> ordens = ordemDeServicoRepository.gerarOrdensDeServico(nunota);
+
+        System.out.println("Ordem de servicos gerados com sucesso");
+
+        ordens.forEach(ordemDeServico -> {
+            ordemDeServico.setParceiro(codParc);
+            ordemDeServicoRepository.salvarOrdensDeServico(ordemDeServico);
+            System.out.println(ordemDeServico.toString());
+        });
 
     }
 
