@@ -7,14 +7,14 @@ import br.com.sankhya.extensions.actionbutton.Registro;
 
 import java.math.BigDecimal;
 
-public class AcaoFecharOS implements AcaoRotinaJava {
+public class AcaoEnviarParaPeritagem implements AcaoRotinaJava {
     @Override
     public void doAction(ContextoAcao contexto) throws Exception {
         Registro[] linhas = contexto.getLinhas();
         ControleOsRepository controleOsRepository = new ControleOsRepository();
         for (Registro linha : linhas) {
             BigDecimal codOs = (BigDecimal) linha.getCampo("ID");
-            controleOsRepository.atualizarStatusOSByPK(codOs, new BigDecimal(12));
+            controleOsRepository.atualizarStatusOSByPK(codOs, new BigDecimal(2));
         }
     }
 }

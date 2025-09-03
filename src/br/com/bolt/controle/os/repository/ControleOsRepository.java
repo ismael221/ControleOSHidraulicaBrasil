@@ -29,4 +29,20 @@ public class ControleOsRepository {
             JapeSession.close(hnd);
         }
     }
+
+    public void atualizarStatusOSByPK(BigDecimal codOS, BigDecimal status) {
+        JapeSession.SessionHandle hnd = null;
+        try {
+            hnd = JapeSession.open();
+
+            JapeFactory.dao("AD_CONTROLEOS")
+                    .prepareToUpdateByPK(codOS)
+                    .set("STATUS", status)
+                    .update();
+        } catch (Exception e) {
+            Utils.logarErro(e);
+        } finally {
+            JapeSession.close(hnd);
+        }
+    }
 }
