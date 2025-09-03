@@ -53,7 +53,7 @@ public class OrdemDeServicoRepository {
                     ordemDeServico.setRevisao(BigDecimal.ZERO);
                     ordemDeServico.setOficina(rset.getBigDecimal("AD_OFICINAITEM"));
                     ordemDeServico.setOrcamento(rset.getBigDecimal("NUNOTA"));
-                    // ordemDeServico.setParceiro(rset.getBigDecimal("CODPARC"));
+                    ordemDeServico.setDescricaoParaNota(rset.getString("OBSERVACAO"));
                     ordemDeServico.setStatusOS(BigDecimal.ONE);
                     ordemDeServicos.add(ordemDeServico);
                     quantidade = quantidade.subtract(BigDecimal.ONE);
@@ -85,7 +85,7 @@ public class OrdemDeServicoRepository {
                     .set("STATUS", ordemDeServico.getStatusOS())
                     .set("CODMACROGRP", ordemDeServico.getMacrogrupo())
                     .set("NUNOTA", ordemDeServico.getOrcamento())
-                    .set("REVISAO", BigDecimal.ONE)
+                    .set("REVISAO", BigDecimal.ZERO)
                     .save();
 
         } catch (Exception e) {

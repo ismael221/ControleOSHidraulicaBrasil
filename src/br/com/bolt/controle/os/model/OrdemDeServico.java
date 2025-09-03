@@ -10,6 +10,24 @@ public class OrdemDeServico {
     public BigDecimal macrogrupo;
     public BigDecimal orcamento;
     public BigDecimal revisao;
+    public String descricaoProblema;
+    public String descricaoParaNota;
+
+    public String getDescricaoProblema() {
+        return descricaoProblema;
+    }
+
+    public void setDescricaoProblema(String descricaoProblema) {
+        this.descricaoProblema = descricaoProblema;
+    }
+
+    public String getDescricaoParaNota() {
+        return descricaoParaNota;
+    }
+
+    public void setDescricaoParaNota(String descricaoParaNota) {
+        this.descricaoParaNota = descricaoParaNota;
+    }
 
     public BigDecimal getOficina() {
         return oficina;
@@ -77,6 +95,8 @@ public class OrdemDeServico {
                 ", macrogrupo=" + macrogrupo +
                 ", orcamento=" + orcamento +
                 ", revisao=" + revisao +
+                ", descricaoProblema='" + descricaoProblema + '\'' +
+                ", descricaoParaNota='" + descricaoParaNota + '\'' +
                 '}';
     }
 }

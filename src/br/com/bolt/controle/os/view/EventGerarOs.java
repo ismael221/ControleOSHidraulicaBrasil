@@ -38,16 +38,21 @@ public class EventGerarOs implements EventoProgramavelJava {
         OrdemDeServicoRepository ordemDeServicoRepository = new OrdemDeServicoRepository();
         BigDecimal nunota = cabecalhoVO.asBigDecimal("NUNOTA");
         BigDecimal codParc = cabecalhoVO.asBigDecimal("CODPARC");
+        String statusNota = cabecalhoVO.asString("STATUSNOTA");
+        String descricao = cabecalhoVO.asString("OBSERVACAO");
 
-        List<OrdemDeServico> ordens = ordemDeServicoRepository.gerarOrdensDeServico(nunota);
+        if (statusNota.equals("L")) {
+            List<OrdemDeServico> ordens = ordemDeServicoRepository.gerarOrdensDeServico(nunota);
 
-        System.out.println("Ordem de servicos gerados com sucesso");
+            System.out.println("Ordem de servicos gerados com sucesso");
 
-        ordens.forEach(ordemDeServico -> {
-            ordemDeServico.setParceiro(codParc);
-            ordemDeServicoRepository.salvarOrdensDeServico(ordemDeServico);
-            System.out.println(ordemDeServico.toString());
-        });
+            ordens.forEach(ordemDeServico -> {
+                ordemDeServico.setParceiro(codParc);
+                ordemDeServico.setDescricaoProblema(descricao);
+                ordemDeServicoRepository.salvarOrdensDeServico(ordemDeServico);
+                System.out.println(ordemDeServico.toString());
+            });
+        }
 
     }
 
