@@ -81,6 +81,8 @@ public class OrdemDeServicoRepository {
             DynamicVO save = empresaDAO.create()
                     .set("OFICINA", ordemDeServico.getOficina())
                     .set("CODEMP", ordemDeServico.getEmpresa())
+                    .set("DESCR", ordemDeServico.getDescricaoProblema())
+                    .set("DESCRNOTA", ordemDeServico.getDescricaoParaNota())
                     .set("CODPARC", ordemDeServico.getParceiro())
                     .set("STATUS", ordemDeServico.getStatusOS())
                     .set("CODMACROGRP", ordemDeServico.getMacrogrupo())

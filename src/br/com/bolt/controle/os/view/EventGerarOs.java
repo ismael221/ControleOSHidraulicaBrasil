@@ -40,8 +40,17 @@ public class EventGerarOs implements EventoProgramavelJava {
         BigDecimal codParc = cabecalhoVO.asBigDecimal("CODPARC");
         String statusNota = cabecalhoVO.asString("STATUSNOTA");
         String descricao = cabecalhoVO.asString("OBSERVACAO");
+        BigDecimal numNota = cabecalhoVO.asBigDecimal("NUMNOTA");
+        BigDecimal codtipOper =  cabecalhoVO.asBigDecimal("CODTIPOPER");
+        System.out.println("Vai gerar OS no afterUpdate");
+        System.out.println("Nunota: " + nunota);
+        System.out.println("CodParc: " + codParc);
+        System.out.println("StatusNota: " + statusNota);
+        System.out.println("Descricao: " + descricao);
+        System.out.println("NumNota: " + numNota);
 
-        if (statusNota.equals("L")) {
+
+        if (numNota != null && numNota.compareTo(BigDecimal.ZERO) > 0 && codtipOper.compareTo(new BigDecimal("1000")) == 0) {
             List<OrdemDeServico> ordens = ordemDeServicoRepository.gerarOrdensDeServico(nunota);
 
             System.out.println("Ordem de servicos gerados com sucesso");
