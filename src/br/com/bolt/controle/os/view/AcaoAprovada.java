@@ -7,6 +7,7 @@ import br.com.sankhya.extensions.actionbutton.Registro;
 import br.com.sankhya.modelcore.exportadorrelatorio.RelatorioFormatado;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class AcaoAprovada implements AcaoRotinaJava {
     @Override
@@ -15,8 +16,16 @@ public class AcaoAprovada implements AcaoRotinaJava {
         ControleOsRepository controleOsRepository = new ControleOsRepository();
         for (Registro linha : linhas) {
             BigDecimal codOs = (BigDecimal) linha.getCampo("ID");
+            String nuOs = (String) linha.getCampo("NUOS");
+
             controleOsRepository.atualizarStatusOSByPK(codOs, new BigDecimal(7));
 
+            controleOsRepository.aprovarOS(codOs);
+
+            List<BigDecimal> revisoesAnteriores = controleOsRepository.encontrarOsPorNuOS(nuOs);
+            for (BigDecimal revisao : revisoesAnteriores) {
+                controleOsRepository.atualizarStatusEreprovarOs(revisao, new BigDecimal(8));
+            }
         }
     }
 }
