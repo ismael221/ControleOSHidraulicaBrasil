@@ -14,6 +14,7 @@ public class AcaoGerarRevisao implements AcaoRotinaJava {
     public void doAction(ContextoAcao contexto) throws Exception {
         RevisaoRepository revisaoRepository = new RevisaoRepository();
         String justificativa = contexto.getParam("MOTIVO").toString();
+        System.out.println("Justificativa da revisão: " + justificativa);
         Registro[] linhas = contexto.getLinhas();
         for (Registro linha : linhas) {
             OrdemDeServico ordemDeServico = new OrdemDeServico();
@@ -46,7 +47,7 @@ public class AcaoGerarRevisao implements AcaoRotinaJava {
             os.setCampo("DESCRNOTA", ordemDeServico.getDescricaoParaNota());
             os.setCampo("CODEMP", ordemDeServico.getEmpresa());
             os.setCampo("CODEQUIP", ordemDeServico.getEquipamento());
-            os.setCampo("CODEMACROGRP", ordemDeServico.getMacrogrupo());
+            os.setCampo("CODMACROGRP", ordemDeServico.getMacrogrupo());
             os.setCampo("NUNOTA", ordemDeServico.getOrcamento());
             os.setCampo("CODPARC", ordemDeServico.getParceiro());
             os.setCampo("CODEMP", ordemDeServico.getOrcamento());
