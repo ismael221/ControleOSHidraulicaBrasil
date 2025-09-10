@@ -25,10 +25,40 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static br.com.bolt.controle.os.service.ImpressaoService.imprimir;
+
 public class AcaoImprimirPeritagem implements AcaoRotinaJava {
     @Override
     public void doAction(ContextoAcao contexto) throws Exception {
-        BigDecimal nuRfe = new BigDecimal(293);
+//        BigDecimal nuRfe = new BigDecimal(176);
+//        List<Object> lstParam = new ArrayList<Object>();
+//        byte[] pdfBytes = null;
+//        String chave = "chave.pdf";
+//        Registro[] regs = contexto.getLinhas();
+//        if (regs.length == 0) {
+//            throw new Exception("Selecione um registro");
+//        }
+//
+//        try {
+//            EntityFacade dwfFacade = EntityFacadeFactory.getDWFFacade();
+//
+//            AgendamentoRelatorioHelper.ParametroRelatorio pk = new AgendamentoRelatorioHelper.ParametroRelatorio("PK_NUNOTA", BigDecimal.class.getName(), regs[0].getCampo("NUNOTA"));
+//            lstParam.add(pk);
+//
+//            pdfBytes = AgendamentoRelatorioHelper.getPrintableReport(nuRfe, lstParam, contexto.getUsuarioLogado(), dwfFacade);
+//
+//            SessionFile sessionFile = SessionFile.createSessionFile("teste.pdf", "teste", pdfBytes);
+//            ServiceContext.getCurrent().putHttpSessionAttribute(chave, sessionFile);
+//
+//            contexto.setMensagemRetorno("<a id=\"alink\" href=\"/mge/visualizadorArquivos.mge?chaveArquivo="
+//                    + chave
+//                    + "\" target=\"_blank\">Baixar Arquivo");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+      //  imprimir(BigDecimal.ZERO,new BigDecimal(176));
+
+        BigDecimal nuRfe = new BigDecimal(176);
         List<Object> lstParam = new ArrayList<Object>();
         byte[] pdfBytes = null;
         String chave = "chave.pdf";
@@ -54,6 +84,7 @@ public class AcaoImprimirPeritagem implements AcaoRotinaJava {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
 }

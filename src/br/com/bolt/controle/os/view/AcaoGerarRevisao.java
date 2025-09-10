@@ -1,6 +1,7 @@
 package br.com.bolt.controle.os.view;
 
 import br.com.bolt.controle.os.model.OrdemDeServico;
+import br.com.bolt.controle.os.repository.ControleOsRepository;
 import br.com.bolt.controle.os.repository.RevisaoRepository;
 import br.com.sankhya.extensions.actionbutton.AcaoRotinaJava;
 import br.com.sankhya.extensions.actionbutton.ContextoAcao;
@@ -13,6 +14,7 @@ public class AcaoGerarRevisao implements AcaoRotinaJava {
     @Override
     public void doAction(ContextoAcao contexto) throws Exception {
         RevisaoRepository revisaoRepository = new RevisaoRepository();
+        ControleOsRepository controleOsRepository = new ControleOsRepository();
         String justificativa = contexto.getParam("MOTIVO").toString();
         System.out.println("Justificativa da revisão: " + justificativa);
         Registro[] linhas = contexto.getLinhas();
@@ -40,26 +42,12 @@ public class AcaoGerarRevisao implements AcaoRotinaJava {
 
             query.close();
 
-            Registro os = contexto.novaLinha("AD_CONTROLEOS");
-            os.setCampo("REVISAO", ordemDeServico.getRevisao());
-            os.setCampo("NUOS", ordemDeServico.getNuOS());
-            os.setCampo("DESCR", ordemDeServico.getDescricaoProblema());
-            os.setCampo("DESCRNOTA", ordemDeServico.getDescricaoParaNota());
-            os.setCampo("CODEMP", ordemDeServico.getEmpresa());
-            os.setCampo("CODEQUIP", ordemDeServico.getEquipamento());
-            os.setCampo("CODMACROGRP", ordemDeServico.getMacrogrupo());
-            os.setCampo("NUNOTA", ordemDeServico.getOrcamento());
-            os.setCampo("CODPARC", ordemDeServico.getParceiro());
-            os.setCampo("CODEMP", ordemDeServico.getOrcamento());
-            os.setCampo("REVISAO", ordemDeServico.getRevisao().add(BigDecimal.ONE));
-            os.save();
+            controleOsRepository.criarNovaOs(ordemDeServico);
 
             StringBuffer mensagem = new StringBuffer();
             mensagem.append("Revisao realizado com sucesso!");
             mensagem.append("\n");
             mensagem.append("Justificativa: " + justificativa);
-            mensagem.append("\n");
-            mensagem.append("OS: " + os.getCampo("NUOS"));
             mensagem.append("\n");
 
             contexto.setMensagemRetorno(mensagem.toString());

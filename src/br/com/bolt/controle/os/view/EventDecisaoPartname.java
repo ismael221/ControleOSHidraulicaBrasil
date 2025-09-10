@@ -34,7 +34,7 @@ public class EventDecisaoPartname implements EventoProgramavelJava {
     public void afterUpdate(PersistenceEvent event) throws Exception {
         System.out.println("EventDecisaoPartname.afterUpdate");
         DynamicVO partnameVO = (DynamicVO) event.getVo();
-        BigDecimal decisao = partnameVO.asBigDecimal("DECISAO");
+        BigDecimal decisao = new BigDecimal(partnameVO.asString("DECISAO"));
         BigDecimal os = partnameVO.asBigDecimal("ID");
         BigDecimal codPartname = partnameVO.asBigDecimal("CODPARTNAME");
 

@@ -31,27 +31,27 @@ public class ImpressaoService {
             jdbc.openSession();
 
             Map<String, Object> param = new HashMap<>();
-            param.put("ROMANEIO", romaneio);
+            //param.put("ROMANEIO", romaneio);
 
             Report report = ReportManager.getInstance().getReport(relatorio, dwfEntityFacade);
 
             JasperPrint jasperPrint = report.buildJasperPrint(param, jdbc.getConnection());
 
             byte[] conteudo = PrintConversionService.getInstance().convert(jasperPrint, byte[].class);
-            PrintManager printManager = PrintManager.getInstance();
-
-            String printerName = "?";
-            String jobDescription = "Impressão por job";
-            int copies = 1;
-
-            BigDecimal userId = AuthenticationInfo.getCurrent().getUserID();
-            String userName = "SUP";
-            BigDecimal codEmp = BigDecimal.ONE;
-            String idDocumento = "0";
-
-            PrintInfo printInfo = new PrintInfo(conteudo, DocTaste.JASPER, DocType.RELATORIO, printerName, jobDescription, copies, userId, userName, codEmp, idDocumento);
-
-            printManager.print(printInfo);
+//            PrintManager printManager = PrintManager.getInstance();
+//
+//            String printerName = "?";
+//            String jobDescription = "Impressão por job";
+//            int copies = 1;
+//
+//            BigDecimal userId = AuthenticationInfo.getCurrent().getUserID();
+//            String userName = "SUP";
+//            BigDecimal codEmp = BigDecimal.ONE;
+//            String idDocumento = "0";
+//
+//            PrintInfo printInfo = new PrintInfo(conteudo, DocTaste.JASPER, DocType.RELATORIO, printerName, jobDescription, copies, userId, userName, codEmp, idDocumento);
+//
+//            printManager.print(printInfo);
 
         } catch (Exception e) {
             e.printStackTrace();
