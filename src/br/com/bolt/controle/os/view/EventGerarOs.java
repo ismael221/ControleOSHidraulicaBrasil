@@ -34,6 +34,7 @@ public class EventGerarOs implements EventoProgramavelJava {
 
     @Override
     public void afterUpdate(PersistenceEvent event) throws Exception {
+        System.out.println("EventGerarOs.afterUpdate");
         DynamicVO cabecalhoVO = (DynamicVO) event.getVo();
         OrdemDeServicoRepository ordemDeServicoRepository = new OrdemDeServicoRepository();
         BigDecimal nunota = cabecalhoVO.asBigDecimal("NUNOTA");
