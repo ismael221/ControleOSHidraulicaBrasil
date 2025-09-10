@@ -213,4 +213,20 @@ public class ControleOsRepository {
 
         return nuos;
     }
+
+    public void atualizarMotivoNaoAprovacao(BigDecimal codOS, String motivo) {
+        JapeSession.SessionHandle hnd = null;
+        try {
+            hnd = JapeSession.open();
+
+            JapeFactory.dao("AD_CONTROLEOS")
+                    .prepareToUpdateByPK(codOS)
+                    .set("MOTIVONAPROVA", motivo.toCharArray())
+                    .update();
+        } catch (Exception e) {
+            Utils.logarErro(e);
+        } finally {
+            JapeSession.close(hnd);
+        }
+    }
 }
