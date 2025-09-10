@@ -15,8 +15,8 @@ public class AcaoOsNaoAprovada implements AcaoRotinaJava {
         for (Registro linha : linhas) {
             BigDecimal codOs = (BigDecimal) linha.getCampo("ID");
             String motivo = (String) linha.getCampo("MOTIVO");
-            controleOsRepository.atualizarStatusOSByPK(codOs, new BigDecimal(13));
-            controleOsRepository.atualizarMotivoNaoAprovacao(codOs, motivo);
+            //  controleOsRepository.atualizarStatusOSByPK(codOs, new BigDecimal(13));
+            controleOsRepository.atualizarMotivoNaoAprovacao(codOs, motivo, new BigDecimal(13));
         }
     }
 }

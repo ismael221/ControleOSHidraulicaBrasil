@@ -38,6 +38,7 @@ public class ControleOsRepository {
     }
 
     public void atualizarStatusOSByPK(BigDecimal codOS, BigDecimal status) {
+        System.out.println("Atualizando status da OS : " + codOS + " - " + status);
         JapeSession.SessionHandle hnd = null;
         try {
             hnd = JapeSession.open();
@@ -214,13 +215,15 @@ public class ControleOsRepository {
         return nuos;
     }
 
-    public void atualizarMotivoNaoAprovacao(BigDecimal codOS, String motivo) {
+    public void atualizarMotivoNaoAprovacao(BigDecimal codOS, String motivo, BigDecimal status) {
+        //TODO Alterar para NativeSQL ou usar um metodo so
         JapeSession.SessionHandle hnd = null;
         try {
             hnd = JapeSession.open();
 
             JapeFactory.dao("AD_CONTROLEOS")
                     .prepareToUpdateByPK(codOS)
+                    .set("STATUS", status)
                     .set("MOTIVONAPROVA", motivo.toCharArray())
                     .update();
         } catch (Exception e) {

@@ -13,11 +13,9 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-
-public class AcaoImprimirPeritagem implements AcaoRotinaJava {
+public class AcaoImprimirAvaliacaoTecnica implements AcaoRotinaJava {
     @Override
     public void doAction(ContextoAcao contexto) throws Exception {
-
         BigDecimal nuRfe = new BigDecimal(176);
         List<Object> lstParam = new ArrayList<Object>();
         byte[] pdfBytes = null;
@@ -35,7 +33,7 @@ public class AcaoImprimirPeritagem implements AcaoRotinaJava {
 
             pdfBytes = AgendamentoRelatorioHelper.getPrintableReport(nuRfe, lstParam, contexto.getUsuarioLogado(), dwfFacade);
 
-            SessionFile sessionFile = SessionFile.createSessionFile("peritagem.pdf", "teste", pdfBytes);
+            SessionFile sessionFile = SessionFile.createSessionFile("avaliacao.pdf", "teste", pdfBytes);
             ServiceContext.getCurrent().putHttpSessionAttribute(chave, sessionFile);
 
             contexto.setMensagemRetorno("<a id=\"alink\" href=\"/mge/visualizadorArquivos.mge?chaveArquivo="
@@ -44,7 +42,5 @@ public class AcaoImprimirPeritagem implements AcaoRotinaJava {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
-
 }

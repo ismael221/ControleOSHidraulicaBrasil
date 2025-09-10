@@ -49,7 +49,7 @@ public class EventDecisaoPartname implements EventoProgramavelJava {
             servicosRepository.lancarPartnamesAoEnviarParaPeritagem(os, codPartname);
         }
 
-        if (os != null && os.compareTo(new BigDecimal(1)) == 0) {
+        if (decisao != null && decisao.compareTo(new BigDecimal(1)) == 0) {
             controleOsRepository.atualizarStatusOSByPK(os, new BigDecimal(3));
         }
 

@@ -24,7 +24,7 @@ public class ServicosRepository {
                     .set("ID", codOs)
                     .set("CODPARTNAME", codPartname)
                     .set("CODPROD", substituicao)
-                    .set("QTD", 1)
+                    .set("QTD", BigDecimal.ONE)
                     .save();
 
         } catch (Exception e) {

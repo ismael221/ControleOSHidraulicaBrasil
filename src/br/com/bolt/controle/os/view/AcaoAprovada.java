@@ -24,7 +24,9 @@ public class AcaoAprovada implements AcaoRotinaJava {
 
             List<BigDecimal> revisoesAnteriores = controleOsRepository.encontrarOsPorNuOS(nuOs);
             for (BigDecimal revisao : revisoesAnteriores) {
-                controleOsRepository.atualizarStatusEreprovarOs(revisao, new BigDecimal(8));
+                if (revisao.compareTo(codOs) != 0) {
+                    controleOsRepository.atualizarStatusEreprovarOs(revisao, new BigDecimal(8));
+                }
             }
         }
     }
