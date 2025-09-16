@@ -38,18 +38,20 @@ public class EventDecisaoPartname implements EventoProgramavelJava {
         BigDecimal os = partnameVO.asBigDecimal("ID");
         BigDecimal codPartname = partnameVO.asBigDecimal("CODPARTNAME");
 
-        System.out.println("Decisao: " + decisao);
-        System.out.println("OS: " + os);
-        System.out.println("CodPartname: " + codPartname);
-
         ServicosRepository servicosRepository = new ServicosRepository();
         ControleOsRepository controleOsRepository = new ControleOsRepository();
 
         if (decisao != null && decisao.compareTo(new BigDecimal(2)) == 0) {
+            System.out.println("Decisao: " + decisao);
+            System.out.println("OS: " + os);
+            System.out.println("CodPartname: " + codPartname);
             servicosRepository.lancarPartnamesAoEnviarParaPeritagem(os, codPartname);
         }
 
         if (decisao != null && decisao.compareTo(new BigDecimal(1)) == 0) {
+            System.out.println("Decisao: " + decisao);
+            System.out.println("OS: " + os);
+            System.out.println("CodPartname: " + codPartname);
             controleOsRepository.atualizarStatusOSByPK(os, new BigDecimal(3));
         }
 

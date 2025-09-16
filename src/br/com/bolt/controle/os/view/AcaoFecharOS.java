@@ -23,7 +23,7 @@ public class AcaoFecharOS implements AcaoRotinaJava {
             BigDecimal codOs = (BigDecimal) linha.getCampo("ID");
             BigDecimal codProd = (BigDecimal) linha.getCampo("CODITEM");
             controleOsRepository.atualizarStatusOSByPK(codOs, new BigDecimal(12));
-            List<Componente> componenteList = partnameRepository.gerarComponentesDoPartname(codProd);
+            List<Componente> componenteList = partnameRepository.gerarComponentesDoPartname(codOs);
             for (Componente componente : componenteList) {
                 componente.setCodProd(codProd);
                 componentesRepository.salvarComponente(componente);

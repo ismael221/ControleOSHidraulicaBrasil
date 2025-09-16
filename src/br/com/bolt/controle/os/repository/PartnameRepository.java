@@ -100,6 +100,7 @@ public class PartnameRepository {
     }
 
     public List<Componente> gerarComponentesDoPartname(BigDecimal codOS) {
+        System.out.println("Gerando componentes do partname " + codOS);
         JdbcWrapper jdbc = null;
         NativeSql sql = null;
         ResultSet rset = null;

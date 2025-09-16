@@ -39,18 +39,33 @@ public class ControleOsRepository {
 
     public void atualizarStatusOSByPK(BigDecimal codOS, BigDecimal status) {
         System.out.println("Atualizando status da OS : " + codOS + " - " + status);
+        JdbcWrapper jdbc = null;
+        NativeSql sql = null;
         JapeSession.SessionHandle hnd = null;
+
         try {
             hnd = JapeSession.open();
+            hnd.setFindersMaxRows(-1);
+            EntityFacade entity = EntityFacadeFactory.getDWFFacade();
+            jdbc = entity.getJdbcWrapper();
+            jdbc.openSession();
 
-            JapeFactory.dao("AD_CONTROLEOS")
-                    .prepareToUpdateByPK(codOS)
-                    .set("STATUS", status)
-                    .update();
+            sql = new NativeSql(jdbc);
+
+            sql.appendSql("UPDATE AD_CONTROLEOS SET STATUS = :STATUS WHERE ID=:CODOS");
+
+            sql.setNamedParameter("STATUS", status);
+            sql.setNamedParameter("CODOS", codOS);
+
+            sql.executeQuery();
+
         } catch (Exception e) {
             Utils.logarErro(e);
         } finally {
+            NativeSql.releaseResources(sql);
+            JdbcWrapper.closeSession(jdbc);
             JapeSession.close(hnd);
+
         }
     }
 
