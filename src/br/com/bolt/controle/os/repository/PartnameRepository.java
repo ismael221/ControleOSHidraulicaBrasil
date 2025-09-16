@@ -1,5 +1,6 @@
 package br.com.bolt.controle.os.repository;
 
+import br.com.bolt.controle.os.model.Componente;
 import br.com.bolt.controle.os.model.Partname;
 import br.com.bolt.controle.os.util.Utils;
 import br.com.sankhya.jape.EntityFacade;
@@ -39,7 +40,8 @@ public class PartnameRepository {
             sql.setNamedParameter("PARTNAME", partname.getPartname());
 
 
-            sql.executeQuery();
+            sql.executeUpdate();
+            sql.executeUpdate("COMMIT");
 
 
         } catch (Exception e) {
@@ -95,5 +97,50 @@ public class PartnameRepository {
         }
 
         return partnames;
+    }
+
+    public List<Componente> gerarComponentesDoPartname(BigDecimal codOS) {
+        JdbcWrapper jdbc = null;
+        NativeSql sql = null;
+        ResultSet rset = null;
+        JapeSession.SessionHandle hnd = null;
+        List<Componente> componentes = new ArrayList<>();
+
+        try {
+            hnd = JapeSession.open();
+            hnd.setFindersMaxRows(-1);
+            EntityFacade entity = EntityFacadeFactory.getDWFFacade();
+            jdbc = entity.getJdbcWrapper();
+            jdbc.openSession();
+
+            sql = new NativeSql(jdbc);
+
+            sql.appendSql("SELECT CODPROD,QTD FROM AD_PARTNAME WHERE ID = :CODOS");
+
+            sql.setNamedParameter("CODOS", codOS);
+
+
+            rset = sql.executeQuery();
+
+            while (rset.next()) {
+                Componente componente = new Componente();
+                componente.setCodComponente(rset.getBigDecimal("CODPROD"));
+                componente.setQuantidade(Double.valueOf(String.valueOf(rset.getBigDecimal("QTD"))));
+                componente.setUnidade("UN");
+                componentes.add(componente);
+            }
+
+
+        } catch (Exception e) {
+            Utils.logarErro(e);
+        } finally {
+            JdbcUtils.closeResultSet(rset);
+            NativeSql.releaseResources(sql);
+            JdbcWrapper.closeSession(jdbc);
+            JapeSession.close(hnd);
+
+        }
+
+        return componentes;
     }
 }
