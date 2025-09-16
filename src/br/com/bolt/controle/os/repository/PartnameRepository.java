@@ -1,52 +1,101 @@
 package br.com.bolt.controle.os.repository;
 
+import br.com.bolt.controle.os.model.Partname;
 import br.com.bolt.controle.os.util.Utils;
+import br.com.sankhya.jape.EntityFacade;
 import br.com.sankhya.jape.core.JapeSession;
+import br.com.sankhya.jape.dao.JdbcWrapper;
+import br.com.sankhya.jape.sql.NativeSql;
 import br.com.sankhya.jape.vo.DynamicVO;
 import br.com.sankhya.jape.wrapper.JapeFactory;
 import br.com.sankhya.jape.wrapper.JapeWrapper;
+import br.com.sankhya.modelcore.util.EntityFacadeFactory;
+import com.sankhya.util.JdbcUtils;
 
 import java.math.BigDecimal;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PartnameRepository {
 
-    final BigDecimal ORDEM_94 = new BigDecimal(600900);
-    final BigDecimal ORDEM_95 = new BigDecimal(601000);
-    final BigDecimal ORDEM_96 = new BigDecimal(601100);
-
-    public void lancarPartnamesAoEnviarParaPeritagem(BigDecimal codOs) {
-        System.out.println("Lançar 3 partnames...");
-
+    public void inserirPartname(Partname partname, BigDecimal codOs) {
+        JdbcWrapper jdbc = null;
+        NativeSql sql = null;
         JapeSession.SessionHandle hnd = null;
+
         try {
             hnd = JapeSession.open();
-            JapeWrapper parntameDAO = JapeFactory.dao("AD_PARTNAME");
+            hnd.setFindersMaxRows(-1);
+            EntityFacade entity = EntityFacadeFactory.getDWFFacade();
+            jdbc = entity.getJdbcWrapper();
+            jdbc.openSession();
 
-            DynamicVO ordem1 = parntameDAO.create()
-                    .set("ID", codOs)
-                    .set("ORDEM", 94)
-                    .set("QTD", 1)
-                    .set("PARTNAME", ORDEM_94)
-                    .save();
+            sql = new NativeSql(jdbc);
 
-            DynamicVO ordem2 = parntameDAO.create()
-                    .set("ID", codOs)
-                    .set("ORDEM", 95)
-                    .set("QTD", 1)
-                    .set("PARTNAME", ORDEM_95)
-                    .save();
+            sql.appendSql("INSERT INTO AD_PARTNAME (ID,ORDEM,QTD,PARTNAME) VALUES (:ID,:ORDEM,:QTD,:PARTNAME)");
 
-            DynamicVO ordem3 = parntameDAO.create()
-                    .set("ID", codOs)
-                    .set("ORDEM", 96)
-                    .set("QTD", 1)
-                    .set("PARTNAME", ORDEM_96)
-                    .save();
+            sql.setNamedParameter("ID", codOs);
+            sql.setNamedParameter("ORDEM", partname.getOrdem());
+            sql.setNamedParameter("QTD", partname.getQuantidade());
+            sql.setNamedParameter("PARTNAME", partname.getPartname());
+
+
+            sql.executeQuery();
+
 
         } catch (Exception e) {
             Utils.logarErro(e);
         } finally {
+            NativeSql.releaseResources(sql);
+            JdbcWrapper.closeSession(jdbc);
             JapeSession.close(hnd);
+
         }
+    }
+
+    public List<Partname> encontrarPartnames(BigDecimal macrogrupo) {
+        JdbcWrapper jdbc = null;
+        NativeSql sql = null;
+        ResultSet rset = null;
+        JapeSession.SessionHandle hnd = null;
+        List<Partname> partnames = new ArrayList<>();
+
+        try {
+            hnd = JapeSession.open();
+            hnd.setFindersMaxRows(-1);
+            EntityFacade entity = EntityFacadeFactory.getDWFFacade();
+            jdbc = entity.getJdbcWrapper();
+            jdbc.openSession();
+
+            sql = new NativeSql(jdbc);
+
+            sql.appendSql("SELECT CODGRUPOPROD,ORDEM FROM AD_MACROGRUPO WHERE CODMAC = :CODMAC");
+
+            sql.setNamedParameter("CODMAC", macrogrupo);
+
+
+            rset = sql.executeQuery();
+
+            while (rset.next()) {
+                Partname partname = new Partname();
+                partname.setPartname(rset.getBigDecimal("CODGRUPOPROD"));
+                partname.setOrdem(rset.getBigDecimal("ORDEM"));
+                partname.setQuantidade(BigDecimal.ONE);
+                partnames.add(partname);
+            }
+
+
+        } catch (Exception e) {
+            Utils.logarErro(e);
+        } finally {
+            JdbcUtils.closeResultSet(rset);
+            NativeSql.releaseResources(sql);
+            JdbcWrapper.closeSession(jdbc);
+            JapeSession.close(hnd);
+
+        }
+
+        return partnames;
     }
 }

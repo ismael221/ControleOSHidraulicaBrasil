@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AcaoImprimirAvaliacaoTecnica implements AcaoRotinaJava {
+public class AcaoImprimirOrcamento implements AcaoRotinaJava {
     @Override
     public void doAction(ContextoAcao contexto) throws Exception {
         BigDecimal nuRfe = new BigDecimal(177);

@@ -1,7 +1,9 @@
 package br.com.bolt.controle.os.view;
 
+import br.com.bolt.controle.os.model.Partname;
 import br.com.bolt.controle.os.repository.ControleOsRepository;
 import br.com.bolt.controle.os.repository.PartnameRepository;
+import br.com.bolt.controle.os.service.PartnameService;
 import br.com.sankhya.extensions.actionbutton.AcaoRotinaJava;
 import br.com.sankhya.extensions.actionbutton.ContextoAcao;
 import br.com.sankhya.extensions.actionbutton.Registro;
@@ -11,14 +13,13 @@ import java.math.BigDecimal;
 public class AcaoEnviarParaPeritagem implements AcaoRotinaJava {
     @Override
     public void doAction(ContextoAcao contexto) throws Exception {
-        PartnameRepository partnameRepository = new PartnameRepository();
         Registro[] linhas = contexto.getLinhas();
         ControleOsRepository controleOsRepository = new ControleOsRepository();
+        PartnameService partnameService = new PartnameService();
         for (Registro linha : linhas) {
             BigDecimal codOs = (BigDecimal) linha.getCampo("ID");
             controleOsRepository.atualizarStatusOSByPK(codOs, new BigDecimal(2));
-            partnameRepository.lancarPartnamesAoEnviarParaPeritagem(codOs);
-
+            partnameService.inserirPartnamesObrigatorios(codOs);
         }
     }
 }

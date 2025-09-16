@@ -216,7 +216,6 @@ public class ControleOsRepository {
     }
 
     public void atualizarMotivoNaoAprovacao(BigDecimal codOS, String motivo, BigDecimal status) {
-        //TODO Alterar para NativeSQL ou usar um metodo so
         JapeSession.SessionHandle hnd = null;
         try {
             hnd = JapeSession.open();
