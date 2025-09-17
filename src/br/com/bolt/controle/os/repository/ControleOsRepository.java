@@ -21,19 +21,33 @@ import java.util.List;
 public class ControleOsRepository {
 
     public void atualizandoNumOsByPK(BigDecimal codOS, String numOs) {
+        JdbcWrapper jdbc = null;
+        NativeSql sql = null;
         JapeSession.SessionHandle hnd = null;
+
         try {
             hnd = JapeSession.open();
+            hnd.setFindersMaxRows(-1);
+            EntityFacade entity = EntityFacadeFactory.getDWFFacade();
+            jdbc = entity.getJdbcWrapper();
+            jdbc.openSession();
 
-            JapeFactory.dao("AD_CONTROLEOS").
-                    prepareToUpdateByPK(codOS)
-                    .set("NUOS", numOs)
-                    .update();
+            sql = new NativeSql(jdbc);
+
+            sql.appendSql("UPDATE AD_CONTROLEOS SET NUOS = :NUOS WHERE ID=:CODOS");
+
+            sql.setNamedParameter("NUOS", numOs);
+            sql.setNamedParameter("CODOS", codOS);
+
+            sql.executeUpdate();
 
         } catch (Exception e) {
             Utils.logarErro(e);
         } finally {
+            NativeSql.releaseResources(sql);
+            JdbcWrapper.closeSession(jdbc);
             JapeSession.close(hnd);
+
         }
     }
 
@@ -57,7 +71,7 @@ public class ControleOsRepository {
             sql.setNamedParameter("STATUS", status);
             sql.setNamedParameter("CODOS", codOS);
 
-            sql.executeQuery();
+            sql.executeUpdate();
 
         } catch (Exception e) {
             Utils.logarErro(e);
@@ -70,35 +84,65 @@ public class ControleOsRepository {
     }
 
     public void aprovarOS(BigDecimal codOs) {
+        JdbcWrapper jdbc = null;
+        NativeSql sql = null;
         JapeSession.SessionHandle hnd = null;
+
         try {
             hnd = JapeSession.open();
+            hnd.setFindersMaxRows(-1);
+            EntityFacade entity = EntityFacadeFactory.getDWFFacade();
+            jdbc = entity.getJdbcWrapper();
+            jdbc.openSession();
 
-            JapeFactory.dao("AD_CONTROLEOS")
-                    .prepareToUpdateByPK(codOs)
-                    .set("APROVADA", "S")
-                    .update();
+            sql = new NativeSql(jdbc);
+
+            sql.appendSql("UPDATE AD_CONTROLEOS SET APROVADA = :APROVADA WHERE ID=:CODOS");
+
+            sql.setNamedParameter("APROVADA", "S");
+            sql.setNamedParameter("CODOS", codOs);
+
+            sql.executeUpdate();
+
         } catch (Exception e) {
             Utils.logarErro(e);
         } finally {
+            NativeSql.releaseResources(sql);
+            JdbcWrapper.closeSession(jdbc);
             JapeSession.close(hnd);
+
         }
     }
 
     public void atualizarStatusEreprovarOs(BigDecimal codOS, BigDecimal status) {
+        JdbcWrapper jdbc = null;
+        NativeSql sql = null;
         JapeSession.SessionHandle hnd = null;
+
         try {
             hnd = JapeSession.open();
+            hnd.setFindersMaxRows(-1);
+            EntityFacade entity = EntityFacadeFactory.getDWFFacade();
+            jdbc = entity.getJdbcWrapper();
+            jdbc.openSession();
 
-            JapeFactory.dao("AD_CONTROLEOS")
-                    .prepareToUpdateByPK(codOS)
-                    .set("APROVADA", "N")
-                    .set("STATUS", status)
-                    .update();
+            sql = new NativeSql(jdbc);
+
+            sql.appendSql("UPDATE AD_CONTROLEOS SET APROVADA = :APROVADA, STATUS = :STATUS WHERE ID=:CODOS");
+
+            sql.setNamedParameter("APROVADA", "N");
+            sql.setNamedParameter("STATUS", status);
+            sql.setNamedParameter("CODOS", codOS);
+
+            sql.executeUpdate();
+
         } catch (Exception e) {
             Utils.logarErro(e);
         } finally {
+            NativeSql.releaseResources(sql);
+            JdbcWrapper.closeSession(jdbc);
             JapeSession.close(hnd);
+
         }
     }
 
@@ -231,19 +275,34 @@ public class ControleOsRepository {
     }
 
     public void atualizarMotivoNaoAprovacao(BigDecimal codOS, String motivo, BigDecimal status) {
+        JdbcWrapper jdbc = null;
+        NativeSql sql = null;
         JapeSession.SessionHandle hnd = null;
+
         try {
             hnd = JapeSession.open();
+            hnd.setFindersMaxRows(-1);
+            EntityFacade entity = EntityFacadeFactory.getDWFFacade();
+            jdbc = entity.getJdbcWrapper();
+            jdbc.openSession();
 
-            JapeFactory.dao("AD_CONTROLEOS")
-                    .prepareToUpdateByPK(codOS)
-                    .set("STATUS", status)
-                    .set("MOTIVONAPROVA", motivo.toCharArray())
-                    .update();
+            sql = new NativeSql(jdbc);
+
+            sql.appendSql("UPDATE AD_CONTROLEOS SET MOTIVONAPROVA = :MOTIVONAPROVA, STATUS = :STATUS WHERE ID=:CODOS");
+
+            sql.setNamedParameter("MOTIVONAPROVA", motivo.toCharArray());
+            sql.setNamedParameter("STATUS", status);
+            sql.setNamedParameter("CODOS", codOS);
+
+            sql.executeUpdate();
+
         } catch (Exception e) {
             Utils.logarErro(e);
         } finally {
+            NativeSql.releaseResources(sql);
+            JdbcWrapper.closeSession(jdbc);
             JapeSession.close(hnd);
+
         }
     }
 }

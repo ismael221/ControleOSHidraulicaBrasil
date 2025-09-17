@@ -1,10 +1,14 @@
 package br.com.bolt.controle.os.repository;
 
 import br.com.bolt.controle.os.util.Utils;
+import br.com.sankhya.jape.EntityFacade;
 import br.com.sankhya.jape.core.JapeSession;
+import br.com.sankhya.jape.dao.JdbcWrapper;
+import br.com.sankhya.jape.sql.NativeSql;
 import br.com.sankhya.jape.vo.DynamicVO;
 import br.com.sankhya.jape.wrapper.JapeFactory;
 import br.com.sankhya.jape.wrapper.JapeWrapper;
+import br.com.sankhya.modelcore.util.EntityFacadeFactory;
 
 import java.math.BigDecimal;
 
@@ -15,22 +19,36 @@ public class ServicosRepository {
     public void lancarPartnamesAoEnviarParaPeritagem(BigDecimal codOs, BigDecimal codPartname) {
         System.out.println("Lançando serviço de substituição...");
 
+        JdbcWrapper jdbc = null;
+        NativeSql sql = null;
         JapeSession.SessionHandle hnd = null;
+
         try {
             hnd = JapeSession.open();
-            JapeWrapper parntameDAO = JapeFactory.dao("AD_SERVICOS");
+            hnd.setFindersMaxRows(-1);
+            EntityFacade entity = EntityFacadeFactory.getDWFFacade();
+            jdbc = entity.getJdbcWrapper();
+            jdbc.openSession();
 
-            DynamicVO save = parntameDAO.create()
-                    .set("ID", codOs)
-                    .set("CODPARTNAME", codPartname)
-                    .set("CODPROD", substituicao)
-                    .set("QTD", BigDecimal.ONE)
-                    .save();
+            sql = new NativeSql(jdbc);
+
+            sql.appendSql("INSERT INTO AD_SERVICOS (ID, CODPARTNAME, CODPROD, QTD) VALUES (:ID, :CODPARTNAME, :CODPROD, :QTD)");
+            sql.setNamedParameter("ID", codOs);
+            sql.setNamedParameter("CODPARTNAME", codPartname);
+            sql.setNamedParameter("CODPROD", substituicao);
+            sql.setNamedParameter("QTD", BigDecimal.ONE);
+
+
+            sql.executeUpdate();
+            sql.executeUpdate("COMMIT");
 
         } catch (Exception e) {
             Utils.logarErro(e);
         } finally {
+            NativeSql.releaseResources(sql);
+            JdbcWrapper.closeSession(jdbc);
             JapeSession.close(hnd);
+
         }
     }
 }
