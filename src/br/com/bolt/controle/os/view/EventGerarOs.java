@@ -32,18 +32,6 @@ public class EventGerarOs implements EventoProgramavelJava {
 
     @Override
     public void afterInsert(PersistenceEvent event) throws Exception {
-        System.out.println("EventGerarOs.afterInsert");
-        PartnameRepository partnameRepository = new PartnameRepository();
-        DynamicVO cabecalhoOSVo = (DynamicVO) event.getVo();
-        BigDecimal macrogrupo = cabecalhoOSVo.asBigDecimal("CODMACROGRP");
-        BigDecimal codOs = cabecalhoOSVo.asBigDecimal("ID");
-
-        if (macrogrupo != null && macrogrupo.compareTo(BigDecimal.ZERO) != 0) {
-            List<Partname> partnames = partnameRepository.encontrarPartnames(macrogrupo);
-            for (Partname partname : partnames) {
-                partnameRepository.inserirPartname(partname, codOs);
-            }
-        }
 
     }
 
