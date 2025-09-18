@@ -5,9 +5,6 @@ import br.com.sankhya.jape.EntityFacade;
 import br.com.sankhya.jape.core.JapeSession;
 import br.com.sankhya.jape.dao.JdbcWrapper;
 import br.com.sankhya.jape.sql.NativeSql;
-import br.com.sankhya.jape.vo.DynamicVO;
-import br.com.sankhya.jape.wrapper.JapeFactory;
-import br.com.sankhya.jape.wrapper.JapeWrapper;
 import br.com.sankhya.modelcore.util.EntityFacadeFactory;
 
 import java.math.BigDecimal;
@@ -16,7 +13,7 @@ public class ServicosRepository {
 
     private final BigDecimal substituicao = new BigDecimal(24);
 
-    public void lancarPartnamesAoEnviarParaPeritagem(BigDecimal codOs, BigDecimal codPartname) {
+    public void lancarServico(BigDecimal codOs, BigDecimal codPartname) {
         System.out.println("Lançando serviço de substituição...");
 
         JdbcWrapper jdbc = null;

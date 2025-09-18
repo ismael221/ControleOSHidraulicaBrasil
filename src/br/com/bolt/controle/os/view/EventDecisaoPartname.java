@@ -45,7 +45,7 @@ public class EventDecisaoPartname implements EventoProgramavelJava {
             System.out.println("Decisao: " + decisao);
             System.out.println("OS: " + os);
             System.out.println("CodPartname: " + codPartname);
-            servicosRepository.lancarPartnamesAoEnviarParaPeritagem(os, codPartname);
+            servicosRepository.lancarServico(os, codPartname);
         }
 
         if (decisao != null && decisao.compareTo(new BigDecimal(1)) == 0) {
