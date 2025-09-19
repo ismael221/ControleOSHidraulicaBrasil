@@ -1,5 +1,7 @@
 package br.com.bolt.controle.os.repository;
 
+import br.com.bolt.controle.os.model.ChaveAgrupamento;
+import br.com.bolt.controle.os.model.Cotacao;
 import br.com.bolt.controle.os.util.Utils;
 import br.com.sankhya.jape.EntityFacade;
 import br.com.sankhya.jape.core.JapeSession;
@@ -11,16 +13,17 @@ import com.sankhya.util.JdbcUtils;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class CotacaoRepository {
 
-    public List<BigDecimal> encontrarCotacoes() {
+    public ArrayList<Cotacao> encontrarCotacoes(BigDecimal idOS) {
         JdbcWrapper jdbc = null;
         NativeSql sql = null;
         ResultSet rset = null;
         JapeSession.SessionHandle hnd = null;
-        List<BigDecimal> listaOsPorNuOS = new ArrayList<>();
+        Map<ChaveAgrupamento, Cotacao> agrupamentoMap = new LinkedHashMap<>();
 
         try {
             hnd = JapeSession.open();
@@ -31,16 +34,51 @@ public class CotacaoRepository {
 
             sql = new NativeSql(jdbc);
 
-            sql.appendSql("SELECT * FROM AD_CONTROLEOS WHERE STATUS = :STATUS");
+            sql.appendSql("SELECT \n" +
+                    "OS.*,\n" +
+                    "MAT.*,\n" +
+                    "PART.*\n" +
+                    "FROM \n" +
+                    "AD_MATERIAIS MAT\n" +
+                    "LEFT JOIN AD_PARTNAME PART\n" +
+                    "ON PART.CODPARTNAME=MAT.CODPARTNAME\n" +
+                    "AND PART.ID=MAT.ID\n" +
+                    "LEFT JOIN AD_CONTROLEOS OS\n" +
+                    "ON OS.ID=MAT.ID\n" +
+                    "WHERE OS.ID=:IDOS");
 
-            sql.setNamedParameter("STATUS", new BigDecimal("4"));
+            sql.setNamedParameter("IDOS", idOS);
 
 
             rset = sql.executeQuery();
 
             while (rset.next()) {
-                BigDecimal codOs = rset.getBigDecimal("ID");
-                listaOsPorNuOS.add(codOs);
+
+                BigDecimal nunota = rset.getBigDecimal("NUNOTA");
+                BigDecimal codProduto = rset.getBigDecimal("CODPROD");
+                String nuos = rset.getString("NUOS");
+
+                ChaveAgrupamento chave = new ChaveAgrupamento(nunota, codProduto);
+
+                Cotacao existente = agrupamentoMap.get(chave);
+
+                if (existente == null){
+                    Cotacao novo = new Cotacao();
+                    novo.setOrcamento(nunota);
+                    novo.setQuantidade(rset.getBigDecimal("QUANTIDADE"));
+                    novo.setDiameInterno(rset.getDouble("DIAINTER"));
+                    novo.setDiameExterno(rset.getDouble("DIAEXTER"));
+                    novo.setPartname(rset.getBigDecimal("PARTNAME"));
+
+                    agrupamentoMap.put(chave,novo);
+                }else{
+                    // Já existe: concatena o número da OS
+                    String atual = existente.getOss();
+                    if (!atual.contains(nuos)) {
+                        existente.setOss(atual + ", " + nuos);
+                    }
+                }
+
             }
 
         } catch (Exception e) {
@@ -53,7 +91,6 @@ public class CotacaoRepository {
 
         }
 
-        return listaOsPorNuOS;
-
+        return new ArrayList<>(agrupamentoMap.values());
     }
 }
