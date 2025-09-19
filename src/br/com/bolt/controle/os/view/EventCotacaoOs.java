@@ -43,8 +43,9 @@ public class EventCotacaoOs implements EventoProgramavelJava {
             System.out.println("Gerando Cotação ...");
             ArrayList<Cotacao> cotacoes = cotacaoRepository.encontrarCotacoes(idOs);
 
-            for(Cotacao cotacao: cotacoes){
-                System.out.println("Cotação gerada: "+ cotacao.toString());
+            for (Cotacao cotacao : cotacoes) {
+                System.out.println("Cotação gerada: " + cotacao.toString());
+                cotacaoRepository.salvarCotacao(cotacao);
             }
         }
     }

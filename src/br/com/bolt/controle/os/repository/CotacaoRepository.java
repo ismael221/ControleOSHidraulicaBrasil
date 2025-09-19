@@ -11,7 +11,9 @@ import br.com.sankhya.modelcore.util.EntityFacadeFactory;
 import com.sankhya.util.JdbcUtils;
 
 import java.math.BigDecimal;
+import java.sql.CallableStatement;
 import java.sql.ResultSet;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -62,7 +64,7 @@ public class CotacaoRepository {
 
                 Cotacao existente = agrupamentoMap.get(chave);
 
-                if (existente == null){
+                if (existente == null) {
                     Cotacao novo = new Cotacao();
                     novo.setOrcamento(nunota);
                     novo.setQuantidade(rset.getBigDecimal("QUANTIDADE"));
@@ -70,8 +72,8 @@ public class CotacaoRepository {
                     novo.setDiameExterno(rset.getDouble("DIAEXTER"));
                     novo.setPartname(rset.getBigDecimal("PARTNAME"));
 
-                    agrupamentoMap.put(chave,novo);
-                }else{
+                    agrupamentoMap.put(chave, novo);
+                } else {
                     // Já existe: concatena o número da OS
                     String atual = existente.getOss();
                     if (!atual.contains(nuos)) {
@@ -92,5 +94,82 @@ public class CotacaoRepository {
         }
 
         return new ArrayList<>(agrupamentoMap.values());
+    }
+
+    public void salvarCotacao(Cotacao cotacao) {
+        System.out.println("Salvando cotação ...");
+
+        JdbcWrapper jdbc = null;
+        NativeSql sql = null;
+        JapeSession.SessionHandle hnd = null;
+
+        try {
+            hnd = JapeSession.open();
+            hnd.setFindersMaxRows(-1);
+            EntityFacade entity = EntityFacadeFactory.getDWFFacade();
+            jdbc = entity.getJdbcWrapper();
+            jdbc.openSession();
+
+            sql = new NativeSql(jdbc);
+
+            sql.appendSql("INSERT INTO AD_COTACAOOS " +
+                    "(CODCOT,CODPROD,DESCR,QTD,DIAMEINTER,DIAMEINTER,DIAMENEXTER,COMPRIMENTO,NUNOTA,OSS,CODPRODMAT,CONTROLE,APROVADO,TIPCOT,FORNECEDOR,PRAZOENTREGA,VLRUNIT,VLRTOTAL,MARGEM,VLRVENDAUNIT,VLRVENDAUNIT,VLRVENDATOTAL,CODOS,PARTNAME) " +
+                    "VALUES (:CODCOT,:CODPROD,:DESCR,:QTD,:DIAMEINTER,:DIAMEINTER,:DIAMENEXTER,:COMPRIMENTO,:NUNOTA,:OSS,:CODPRODMAT,:CONTROLE,:APROVADO,:TIPCOT,:FORNECEDOR,:PRAZOENTREGA,:VLRUNIT,:VLRTOTAL,:MARGEM,:VLRVENDAUNIT,:VLRVENDAUNIT,:VLRVENDATOTAL,:CODOS,:PARTNAME)");
+
+            System.out.println(sql);
+            sql.setNamedParameter("CODCOT", encontrarPkCotacao());
+            sql.setNamedParameter("CODPROD", cotacao.getCodProduto());
+            sql.setNamedParameter("DESCR", cotacao.getDescricao());
+            //TODO Finalizar parametros
+
+            sql.executeUpdate();
+            sql.executeUpdate("COMMIT");
+
+        } catch (Exception e) {
+            Utils.logarErro(e);
+        } finally {
+            NativeSql.releaseResources(sql);
+            JdbcWrapper.closeSession(jdbc);
+            JapeSession.close(hnd);
+
+        }
+    }
+
+    public BigDecimal encontrarPkCotacao() {
+        JapeSession.SessionHandle hnd = null;
+        JdbcWrapper jdbc = null;
+        BigDecimal codCotacao = BigDecimal.ZERO;
+
+        try {
+            hnd = JapeSession.open();
+            EntityFacade dwfFacade = EntityFacadeFactory.getDWFFacade();
+
+            jdbc = dwfFacade.getJdbcWrapper();
+            jdbc.openSession();
+
+            CallableStatement cstmt = jdbc.getConnection().prepareCall("{call STP_KEYGEN_TGFNUM(?,?,?,?,?,?)}");
+            cstmt.setQueryTimeout(60);
+
+            cstmt.setString(1, "AD_COTACAOOS");
+            cstmt.setBigDecimal(2, BigDecimal.ONE);
+            cstmt.setString(3, "AD_COTACAOOS");
+            cstmt.setString(4, "CODCOT");
+            cstmt.setBigDecimal(5, BigDecimal.ZERO);
+
+            cstmt.registerOutParameter(6, Types.NUMERIC);
+
+            cstmt.execute();
+
+            codCotacao = (BigDecimal) cstmt.getObject(6);
+
+            System.out.println("Saida: " + codCotacao);
+        } catch (Exception e) {
+            Utils.logarErro(e);
+        } finally {
+            JdbcWrapper.closeSession(jdbc);
+            JapeSession.close(hnd);
+        }
+
+        return codCotacao;
     }
 }
