@@ -1,5 +1,6 @@
 package br.com.bolt.controle.os.view;
 
+import br.com.bolt.controle.os.enums.StatusOS;
 import br.com.bolt.controle.os.model.Partname;
 import br.com.bolt.controle.os.repository.ControleOsRepository;
 import br.com.bolt.controle.os.repository.PartnameRepository;
@@ -18,7 +19,7 @@ public class AcaoEnviarParaPeritagem implements AcaoRotinaJava {
         PartnameService partnameService = new PartnameService();
         for (Registro linha : linhas) {
             BigDecimal codOs = (BigDecimal) linha.getCampo("ID");
-            controleOsRepository.atualizarStatusOSByPK(codOs, new BigDecimal(2));
+            controleOsRepository.atualizarStatusOSByPK(codOs, StatusOS.AGUARDANDO_PERITAGEM.getCodigo());
             partnameService.inserirPartnamesObrigatorios(codOs);
         }
     }

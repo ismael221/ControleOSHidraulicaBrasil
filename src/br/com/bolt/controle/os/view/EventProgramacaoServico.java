@@ -1,5 +1,6 @@
 package br.com.bolt.controle.os.view;
 
+import br.com.bolt.controle.os.enums.StatusOS;
 import br.com.bolt.controle.os.repository.ControleOsRepository;
 import br.com.bolt.controle.os.repository.ServicosRepository;
 import br.com.sankhya.extensions.eventoprogramavel.EventoProgramavelJava;
@@ -42,16 +43,16 @@ public class EventProgramacaoServico implements EventoProgramavelJava {
 
 
         if (idOs != null && status != null) {
-            if (status.equals("P")){
-                controleOsRepository.atualizarStatusOSByPK(idOs, new BigDecimal(9));
+            if (status.equals("P")) {
+                controleOsRepository.atualizarStatusOSByPK(idOs, StatusOS.EXECUCAO.getCodigo());
             }
 
             if (status.equals("F")) {
                 BigDecimal finalizados = servicosRepository.quantidadeFinalizados(idOs);
                 BigDecimal totaLServicos = servicosRepository.quantidadeDeServicos(idOs);
 
-                if (finalizados.compareTo(totaLServicos) == 0){
-                    controleOsRepository.atualizarStatusOSByPK(idOs,new BigDecimal(10));
+                if (finalizados.compareTo(totaLServicos) == 0) {
+                    controleOsRepository.atualizarStatusOSByPK(idOs, StatusOS.FINALIZADA.getCodigo());
                 }
             }
         }

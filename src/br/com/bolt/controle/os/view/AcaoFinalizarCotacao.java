@@ -1,5 +1,6 @@
 package br.com.bolt.controle.os.view;
 
+import br.com.bolt.controle.os.enums.StatusOS;
 import br.com.bolt.controle.os.repository.ControleOsRepository;
 import br.com.sankhya.extensions.actionbutton.AcaoRotinaJava;
 import br.com.sankhya.extensions.actionbutton.ContextoAcao;
@@ -15,7 +16,7 @@ public class AcaoFinalizarCotacao implements AcaoRotinaJava {
         ControleOsRepository controleOsRepository = new ControleOsRepository();
         for (Registro linha : linhas) {
             BigDecimal codOs = (BigDecimal) linha.getCampo("CODOS");
-            controleOsRepository.atualizarStatusOSByPK(codOs, new BigDecimal(5));
+            controleOsRepository.atualizarStatusOSByPK(codOs, StatusOS.PRECIFICACAO.getCodigo());
         }
     }
 }

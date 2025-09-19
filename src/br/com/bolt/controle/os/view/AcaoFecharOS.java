@@ -1,5 +1,6 @@
 package br.com.bolt.controle.os.view;
 
+import br.com.bolt.controle.os.enums.StatusOS;
 import br.com.bolt.controle.os.model.Componente;
 import br.com.bolt.controle.os.repository.ComponentesRepository;
 import br.com.bolt.controle.os.repository.ControleOsRepository;
@@ -22,7 +23,7 @@ public class AcaoFecharOS implements AcaoRotinaJava {
         for (Registro linha : linhas) {
             BigDecimal codOs = (BigDecimal) linha.getCampo("ID");
             BigDecimal codProd = (BigDecimal) linha.getCampo("CODITEM");
-            controleOsRepository.atualizarStatusOSByPK(codOs, new BigDecimal(12));
+            controleOsRepository.atualizarStatusOSByPK(codOs, StatusOS.FECHADA.getCodigo());
             List<Componente> componenteList = partnameRepository.gerarComponentesDoPartname(codOs);
             for (Componente componente : componenteList) {
                 componente.setCodProd(codProd);

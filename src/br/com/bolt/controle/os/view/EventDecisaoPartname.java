@@ -1,5 +1,6 @@
 package br.com.bolt.controle.os.view;
 
+import br.com.bolt.controle.os.enums.StatusOS;
 import br.com.bolt.controle.os.repository.ControleOsRepository;
 import br.com.bolt.controle.os.repository.ServicosRepository;
 import br.com.sankhya.extensions.eventoprogramavel.EventoProgramavelJava;
@@ -52,7 +53,7 @@ public class EventDecisaoPartname implements EventoProgramavelJava {
             System.out.println("Decisao: " + decisao);
             System.out.println("OS: " + os);
             System.out.println("CodPartname: " + codPartname);
-            controleOsRepository.atualizarStatusOSByPK(os, new BigDecimal(3));
+            controleOsRepository.atualizarStatusOSByPK(os, StatusOS.PERITAGEM_EM_ANDAMENTO.getCodigo());
         }
 
     }
