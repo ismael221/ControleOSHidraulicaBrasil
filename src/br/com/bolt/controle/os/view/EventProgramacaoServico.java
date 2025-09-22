@@ -10,7 +10,8 @@ import br.com.sankhya.jape.vo.DynamicVO;
 
 import java.math.BigDecimal;
 
-public class EventDecisaoPartname implements EventoProgramavelJava {
+public class EventProgramacaoServico implements EventoProgramavelJava {
+
     @Override
     public void beforeInsert(PersistenceEvent event) throws Exception {
 
@@ -33,28 +34,29 @@ public class EventDecisaoPartname implements EventoProgramavelJava {
 
     @Override
     public void afterUpdate(PersistenceEvent event) throws Exception {
-        System.out.println("EventDecisaoPartname.afterUpdate");
-        DynamicVO partnameVO = (DynamicVO) event.getVo();
-        BigDecimal decisao = new BigDecimal(partnameVO.asString("DECISAO"));
-        BigDecimal os = partnameVO.asBigDecimal("ID");
-        BigDecimal codPartname = partnameVO.asBigDecimal("CODPARTNAME");
-
-        ServicosRepository servicosRepository = new ServicosRepository();
+        System.out.println("EventProgramacaoServico::AfterUpdate");
         ControleOsRepository controleOsRepository = new ControleOsRepository();
+        ServicosRepository servicosRepository = new ServicosRepository();
+        DynamicVO servicoVO = (DynamicVO) event.getVo();
+        BigDecimal idOs = servicoVO.asBigDecimal("ID");
+        String status = servicoVO.asString("STATUS");
 
-        if (decisao != null && decisao.compareTo(new BigDecimal(2)) == 0) {
-            System.out.println("Decisao: " + decisao);
-            System.out.println("OS: " + os);
-            System.out.println("CodPartname: " + codPartname);
-            servicosRepository.lancarServico(os, codPartname);
+
+        if (idOs != null && status != null) {
+            if (status.equals("P")) {
+                controleOsRepository.atualizarStatusOSByPK(idOs, StatusOS.EXECUCAO.getCodigo());
+            }
+
+            if (status.equals("F")) {
+                BigDecimal finalizados = servicosRepository.quantidadeFinalizados(idOs);
+                BigDecimal totaLServicos = servicosRepository.quantidadeDeServicos(idOs);
+
+                if (finalizados.compareTo(totaLServicos) == 0) {
+                    controleOsRepository.atualizarStatusOSByPK(idOs, StatusOS.FINALIZADA.getCodigo());
+                }
+            }
         }
 
-        if (decisao != null && decisao.compareTo(new BigDecimal(1)) == 0) {
-            System.out.println("Decisao: " + decisao);
-            System.out.println("OS: " + os);
-            System.out.println("CodPartname: " + codPartname);
-            controleOsRepository.atualizarStatusOSByPK(os, StatusOS.PERITAGEM_EM_ANDAMENTO.getCodigo());
-        }
 
     }
 

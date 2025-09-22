@@ -1,5 +1,6 @@
 package br.com.bolt.controle.os.view;
 
+import br.com.bolt.controle.os.enums.StatusOS;
 import br.com.bolt.controle.os.repository.ControleOsRepository;
 import br.com.sankhya.extensions.actionbutton.AcaoRotinaJava;
 import br.com.sankhya.extensions.actionbutton.ContextoAcao;
@@ -15,7 +16,7 @@ public class AcaoOsNaoAprovada implements AcaoRotinaJava {
         for (Registro linha : linhas) {
             BigDecimal codOs = (BigDecimal) linha.getCampo("ID");
             String motivo = (String) linha.getCampo("MOTIVO");
-            controleOsRepository.atualizarMotivoNaoAprovacao(codOs, motivo, new BigDecimal(13));
+            controleOsRepository.atualizarMotivoNaoAprovacao(codOs, motivo, StatusOS.DEVOLVER.getCodigo());
         }
     }
 }

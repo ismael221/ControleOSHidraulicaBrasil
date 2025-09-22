@@ -1,5 +1,6 @@
 package br.com.bolt.controle.os.view;
 
+import br.com.bolt.controle.os.enums.StatusOS;
 import br.com.bolt.controle.os.repository.ControleOsRepository;
 import br.com.sankhya.extensions.actionbutton.AcaoRotinaJava;
 import br.com.sankhya.extensions.actionbutton.ContextoAcao;
@@ -18,14 +19,14 @@ public class AcaoAprovada implements AcaoRotinaJava {
             BigDecimal codOs = (BigDecimal) linha.getCampo("ID");
             String nuOs = (String) linha.getCampo("NUOS");
 
-            controleOsRepository.atualizarStatusOSByPK(codOs, new BigDecimal(7));
+            controleOsRepository.atualizarStatusOSByPK(codOs, StatusOS.APROVADA.getCodigo());
 
             controleOsRepository.aprovarOS(codOs);
 
             List<BigDecimal> revisoesAnteriores = controleOsRepository.encontrarOsPorNuOS(nuOs);
             for (BigDecimal revisao : revisoesAnteriores) {
                 if (revisao.compareTo(codOs) != 0) {
-                    controleOsRepository.atualizarStatusEreprovarOs(revisao, new BigDecimal(8));
+                    controleOsRepository.atualizarStatusEreprovarOs(revisao, StatusOS.FECHADA_APROVADA_EM_OUTRA_REVISAO.getCodigo());
                 }
             }
         }

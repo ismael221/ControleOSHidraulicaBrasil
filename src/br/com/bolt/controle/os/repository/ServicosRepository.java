@@ -6,8 +6,10 @@ import br.com.sankhya.jape.core.JapeSession;
 import br.com.sankhya.jape.dao.JdbcWrapper;
 import br.com.sankhya.jape.sql.NativeSql;
 import br.com.sankhya.modelcore.util.EntityFacadeFactory;
+import com.sankhya.util.JdbcUtils;
 
 import java.math.BigDecimal;
+import java.sql.ResultSet;
 
 public class ServicosRepository {
 
@@ -48,4 +50,68 @@ public class ServicosRepository {
 
         }
     }
+
+    public BigDecimal quantidadeFinalizados(BigDecimal idOs) {
+        JdbcWrapper jdbc = null;
+        NativeSql sql = null;
+        ResultSet rset = null;
+        BigDecimal finalizados = BigDecimal.ZERO;
+        try {
+            EntityFacade entity = EntityFacadeFactory.getDWFFacade();
+            jdbc = entity.getJdbcWrapper();
+            jdbc.openSession();
+            sql = new NativeSql(jdbc);
+
+            sql.appendSql("SELECT COUNT(*) AS TOTAL FROM AD_SERVICOS WHERE (STATUS <> 'F'  OR STATUS IS NULL) AND ID = :ID");
+            sql.setNamedParameter("ID", idOs);
+
+            rset = sql.executeQuery();
+
+            if (rset.next()) {
+                finalizados = rset.getBigDecimal("TOTAL");
+            }
+
+        } catch (Exception e) {
+            Utils.logarErro(e);
+        } finally {
+            JdbcUtils.closeResultSet(rset);
+            NativeSql.releaseResources(sql);
+            JdbcWrapper.closeSession(jdbc);
+        }
+
+        return finalizados;
+    }
+
+    public BigDecimal quantidadeDeServicos(BigDecimal idOs) {
+        JdbcWrapper jdbc = null;
+        NativeSql sql = null;
+        ResultSet rset = null;
+        BigDecimal servicos = BigDecimal.ZERO;
+
+        try {
+            EntityFacade entity = EntityFacadeFactory.getDWFFacade();
+            jdbc = entity.getJdbcWrapper();
+            jdbc.openSession();
+            sql = new NativeSql(jdbc);
+
+            sql.appendSql("SELECT COUNT(*) FROM AD_SERVICOS WHERE ID = :ID");
+            sql.setNamedParameter("ID", idOs);
+
+            rset = sql.executeQuery();
+
+            if (rset.next()) {
+                servicos = rset.getBigDecimal("TOTAL");
+            }
+
+        } catch (Exception e) {
+            Utils.logarErro(e);
+        } finally {
+            JdbcUtils.closeResultSet(rset);
+            NativeSql.releaseResources(sql);
+            JdbcWrapper.closeSession(jdbc);
+        }
+
+        return servicos;
+    }
+
 }
