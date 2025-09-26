@@ -32,12 +32,13 @@ public class PartnameRepository {
 
             sql = new NativeSql(jdbc);
 
-            sql.appendSql("INSERT INTO AD_PARTNAME (ID,ORDEM,QTD,PARTNAME) VALUES (:ID,:ORDEM,:QTD,:PARTNAME)");
+            sql.appendSql("INSERT INTO AD_PARTNAME (CODPARTNAME,ID,ORDEM,QTD,PARTNAME) VALUES (:CODPARTNAME,:ID,:ORDEM,:QTD,:PARTNAME)");
 
             sql.setNamedParameter("ID", codOs);
             sql.setNamedParameter("ORDEM", partname.getOrdem());
             sql.setNamedParameter("QTD", partname.getQuantidade());
             sql.setNamedParameter("PARTNAME", partname.getPartname());
+            sql.setNamedParameter("CODPARTNAME", encontrarPkPartnames(codOs));
 
 
             sql.executeUpdate();
@@ -52,6 +53,47 @@ public class PartnameRepository {
             JapeSession.close(hnd);
 
         }
+    }
+
+    public BigDecimal encontrarPkPartnames(BigDecimal codOs) {
+
+        JdbcWrapper jdbc = null;
+        NativeSql sql = null;
+        ResultSet rset = null;
+        JapeSession.SessionHandle hnd = null;
+        BigDecimal pkPartname = BigDecimal.ZERO;
+
+        try {
+            hnd = JapeSession.open();
+            hnd.setFindersMaxRows(-1);
+            EntityFacade entity = EntityFacadeFactory.getDWFFacade();
+            jdbc = entity.getJdbcWrapper();
+            jdbc.openSession();
+
+            sql = new NativeSql(jdbc);
+
+            sql.appendSql("SELECT NVL(MAX(CODPARTNAME),0) + 1 AS PRIMARYKEY FROM AD_PARTNAME WHERE ID = :CODOS");
+
+            sql.setNamedParameter("CODOS", codOs);
+
+            rset = sql.executeQuery();
+
+            if (rset.next()) {
+                pkPartname = rset.getBigDecimal("PRIMARYKEY");
+            }
+
+        } catch (Exception e) {
+            Utils.logarErro(e);
+        } finally {
+            JdbcUtils.closeResultSet(rset);
+            NativeSql.releaseResources(sql);
+            JdbcWrapper.closeSession(jdbc);
+            JapeSession.close(hnd);
+
+        }
+
+        return pkPartname;
+
     }
 
     public List<Partname> encontrarPartnames(BigDecimal macrogrupo) {
