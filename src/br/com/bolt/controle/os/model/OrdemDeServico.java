@@ -23,6 +23,33 @@ public class OrdemDeServico {
     public BigDecimal revisao;
     public String descricaoProblema;
     public String descricaoParaNota;
+    public String chassi;
+    public String frota;
+    public String numeroPedido;
+
+    public String getChassi() {
+        return chassi;
+    }
+
+    public void setChassi(String chassi) {
+        this.chassi = chassi;
+    }
+
+    public String getFrota() {
+        return frota;
+    }
+
+    public void setFrota(String frota) {
+        this.frota = frota;
+    }
+
+    public String getNumeroPedido() {
+        return numeroPedido;
+    }
+
+    public void setNumeroPedido(String numeroPedido) {
+        this.numeroPedido = numeroPedido;
+    }
 
     public String getPrevEntregaPeca() {
         return prevEntregaPeca;
@@ -207,6 +234,9 @@ public class OrdemDeServico {
                 ", revisao=" + revisao +
                 ", descricaoProblema='" + descricaoProblema + '\'' +
                 ", descricaoParaNota='" + descricaoParaNota + '\'' +
+                ", chassi='" + chassi + '\'' +
+                ", frota='" + frota + '\'' +
+                ", numeroPedido='" + numeroPedido + '\'' +
                 '}';
     }
 }

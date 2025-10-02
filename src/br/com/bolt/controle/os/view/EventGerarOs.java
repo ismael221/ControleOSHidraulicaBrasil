@@ -46,6 +46,10 @@ public class EventGerarOs implements EventoProgramavelJava {
         String descricao = cabecalhoVO.asString("OBSERVACAO");
         BigDecimal numNota = cabecalhoVO.asBigDecimal("NUMNOTA");
         BigDecimal codtipOper = cabecalhoVO.asBigDecimal("CODTIPOPER");
+        String chassi = cabecalhoVO.asString("AD_CHASSI");
+        String frota = cabecalhoVO.asString("AD_NRFROTA");
+        String nuPedido = cabecalhoVO.asString("NUMPEDIDO2");
+
         System.out.println("Vai gerar OS no afterUpdate");
         System.out.println("Nunota: " + nunota);
         System.out.println("CodParc: " + codParc);
@@ -62,6 +66,9 @@ public class EventGerarOs implements EventoProgramavelJava {
             ordens.forEach(ordemDeServico -> {
                 ordemDeServico.setParceiro(codParc);
                 ordemDeServico.setDescricaoProblema(descricao);
+                ordemDeServico.setChassi(chassi);
+                ordemDeServico.setFrota(frota);
+                ordemDeServico.setNumeroPedido(nuPedido);
                 ordemDeServicoRepository.salvarOrdensDeServico(ordemDeServico);
                 System.out.println(ordemDeServico.toString());
             });
