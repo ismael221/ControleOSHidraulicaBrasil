@@ -7,6 +7,9 @@ import br.com.sankhya.jape.EntityFacade;
 import br.com.sankhya.jape.core.JapeSession;
 import br.com.sankhya.jape.dao.JdbcWrapper;
 import br.com.sankhya.jape.sql.NativeSql;
+import br.com.sankhya.jape.vo.DynamicVO;
+import br.com.sankhya.jape.wrapper.JapeFactory;
+import br.com.sankhya.jape.wrapper.JapeWrapper;
 import br.com.sankhya.modelcore.util.EntityFacadeFactory;
 import com.sankhya.util.JdbcUtils;
 
@@ -21,39 +24,22 @@ public class PartnameRepository {
 
     public void inserirPartname(Partname partname, BigDecimal codOs) {
         System.out.println("Inserindo partname " + partname + "na OS " + codOs);
-        JdbcWrapper jdbc = null;
-        NativeSql sql = null;
-        JapeSession.SessionHandle hnd = null;
 
         try {
             hnd = JapeSession.open();
-            hnd.setFindersMaxRows(-1);
-            EntityFacade entity = EntityFacadeFactory.getDWFFacade();
-            jdbc = entity.getJdbcWrapper();
-            jdbc.openSession();
-
-            sql = new NativeSql(jdbc);
-
-            sql.appendSql("INSERT INTO AD_PARTNAME (CODPARTNAME,ID,ORDEM,QTD,PARTNAME) VALUES (:CODPARTNAME,:ID,:ORDEM,:QTD,:PARTNAME)");
-
-            sql.setNamedParameter("ID", codOs);
-            sql.setNamedParameter("ORDEM", partname.getOrdem());
-            sql.setNamedParameter("QTD", partname.getQuantidade());
-            sql.setNamedParameter("PARTNAME", partname.getPartname());
-            sql.setNamedParameter("CODPARTNAME", encontrarPkPartnames(codOs));
-
-
-            sql.executeUpdate();
-            sql.executeUpdate("COMMIT");
-
+            JapeWrapper partnameDAO = JapeFactory.dao("AD_PARTNAME");
+            DynamicVO save = partnameDAO.create()
+                    .set("ID", codOs)
+                    .set("ORDEM", partname.getOrdem())
+                    .set("DECISAO", partname.getDecisao())
+                    .set("QTD", partname.getQuantidade())
+                    .set("PARTNAME", partname.getPartname())
+                    .save();
 
         } catch (Exception e) {
             Utils.logarErro(e);
         } finally {
-            NativeSql.releaseResources(sql);
-            JdbcWrapper.closeSession(jdbc);
             JapeSession.close(hnd);
-
         }
     }
 
@@ -62,7 +48,6 @@ public class PartnameRepository {
         JdbcWrapper jdbc = null;
         NativeSql sql = null;
         ResultSet rset = null;
-        JapeSession.SessionHandle hnd = null;
         BigDecimal pkPartname = BigDecimal.ZERO;
 
         try {
@@ -102,7 +87,6 @@ public class PartnameRepository {
         JdbcWrapper jdbc = null;
         NativeSql sql = null;
         ResultSet rset = null;
-        JapeSession.SessionHandle hnd = null;
         List<Partname> partnames = new ArrayList<>();
 
         try {
@@ -148,7 +132,6 @@ public class PartnameRepository {
         JdbcWrapper jdbc = null;
         NativeSql sql = null;
         ResultSet rset = null;
-        JapeSession.SessionHandle hnd = null;
         List<Componente> componentes = new ArrayList<>();
 
         try {

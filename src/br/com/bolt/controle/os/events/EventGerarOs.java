@@ -53,6 +53,9 @@ public class EventGerarOs implements EventoProgramavelJava {
         System.out.println("StatusNota: " + statusNota);
         System.out.println("Descricao: " + descricao);
         System.out.println("NumNota: " + numNota);
+        System.out.println("Chassi: " + chassi);
+        System.out.println("Frota: " + frota);
+        System.out.println("NuPedido: " + nuPedido);
 
 
         if (numNota != null && numNota.compareTo(BigDecimal.ZERO) > 0 && codtipOper.compareTo(new BigDecimal("1000")) == 0) {

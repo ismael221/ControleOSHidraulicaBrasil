@@ -87,6 +87,9 @@ public class OrdemDeServicoRepository {
                     .set("STATUS", ordemDeServico.getStatusOS())
                     .set("CODMACROGRP", ordemDeServico.getMacrogrupo())
                     .set("NUNOTA", ordemDeServico.getOrcamento())
+                    .set("CHASSI",ordemDeServico.getChassi())
+                    .set("FROTA", ordemDeServico.getFrota())
+                    .set("NUPEDIDO", ordemDeServico.getNumeroPedido())
                     .set("REVISAO", BigDecimal.ZERO)
                     .save();
 

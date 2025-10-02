@@ -25,7 +25,6 @@ public class ControleOsRepository {
     public void atualizandoNumOsByPK(BigDecimal codOS, String numOs) {
         JdbcWrapper jdbc = null;
         NativeSql sql = null;
-        JapeSession.SessionHandle hnd = null;
 
         try {
             hnd = JapeSession.open();
@@ -72,7 +71,6 @@ public class ControleOsRepository {
     public void aprovarOS(BigDecimal codOs) {
         JdbcWrapper jdbc = null;
         NativeSql sql = null;
-        JapeSession.SessionHandle hnd = null;
 
         try {
             hnd = JapeSession.open();
@@ -103,7 +101,6 @@ public class ControleOsRepository {
     public void atualizarStatusEreprovarOs(BigDecimal codOS, BigDecimal status) {
         JdbcWrapper jdbc = null;
         NativeSql sql = null;
-        JapeSession.SessionHandle hnd = null;
 
         try {
             hnd = JapeSession.open();
@@ -136,7 +133,6 @@ public class ControleOsRepository {
         JdbcWrapper jdbc = null;
         NativeSql sql = null;
         ResultSet rset = null;
-        JapeSession.SessionHandle hnd = null;
         List<BigDecimal> listaOsPorNuOS = new ArrayList<>();
 
         try {
@@ -177,7 +173,6 @@ public class ControleOsRepository {
     public void criarNovaOs(OrdemDeServico ordemDeServico) {
         JdbcWrapper jdbc = null;
         NativeSql sql = null;
-        JapeSession.SessionHandle hnd = null;
 
         try {
             hnd = JapeSession.open();
@@ -263,7 +258,6 @@ public class ControleOsRepository {
     public void atualizarMotivoNaoAprovacao(BigDecimal codOS, String motivo, BigDecimal status) {
         JdbcWrapper jdbc = null;
         NativeSql sql = null;
-        JapeSession.SessionHandle hnd = null;
 
         try {
             hnd = JapeSession.open();

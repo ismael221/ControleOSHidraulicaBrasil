@@ -7,11 +7,13 @@ public class Partname {
     public BigDecimal partname;
     public BigDecimal ordem;
     public BigDecimal quantidade;
+    public BigDecimal decisao;
 
-    public Partname(BigDecimal partname, BigDecimal ordem, BigDecimal quantidade) {
+    public Partname(BigDecimal partname, BigDecimal ordem, BigDecimal quantidade, BigDecimal decisao) {
         this.partname = partname;
         this.ordem = ordem;
         this.quantidade = quantidade;
+        this.decisao = decisao;
     }
 
     public Partname() {}
@@ -40,12 +42,21 @@ public class Partname {
         this.partname = partname;
     }
 
+    public BigDecimal getDecisao() {
+        return decisao;
+    }
+
+    public void setDecisao(BigDecimal decisao) {
+        this.decisao = decisao;
+    }
+
     @Override
     public String toString() {
         return "Partname{" +
                 "partname=" + partname +
                 ", ordem=" + ordem +
                 ", quantidade=" + quantidade +
+                ", decisao=" + decisao +
                 '}';
     }
 }
