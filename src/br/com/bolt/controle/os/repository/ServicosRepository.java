@@ -5,6 +5,9 @@ import br.com.sankhya.jape.EntityFacade;
 import br.com.sankhya.jape.core.JapeSession;
 import br.com.sankhya.jape.dao.JdbcWrapper;
 import br.com.sankhya.jape.sql.NativeSql;
+import br.com.sankhya.jape.vo.DynamicVO;
+import br.com.sankhya.jape.wrapper.JapeFactory;
+import br.com.sankhya.jape.wrapper.JapeWrapper;
 import br.com.sankhya.modelcore.util.EntityFacadeFactory;
 import com.sankhya.util.JdbcUtils;
 
@@ -13,33 +16,46 @@ import java.sql.ResultSet;
 
 public class ServicosRepository {
 
-    private final BigDecimal substituicao = new BigDecimal(24);
+    JapeSession.SessionHandle hnd = null;
 
-    public BigDecimal encontrarPkServicos(BigDecimal codOs) {
+    public void lancarServico(BigDecimal codOs, BigDecimal codPartname, BigDecimal codProd) {
+        System.out.println("Lançando serviço de substituição...");
+        try {
+            hnd = JapeSession.open();
+            JapeWrapper servicoDAO = JapeFactory.dao("AD_SERVICOS");
+            DynamicVO save = servicoDAO.create()
+                    .set("ID", codOs)
+                    .set("CODPARTNAME", codPartname)
+                    .set("CODPROD", codProd)
+                    .set("QTD", BigDecimal.ONE)
+                    .save();
+
+        } catch (Exception e) {
+            Utils.logarErro(e);
+        } finally {
+            JapeSession.close(hnd);
+        }
+    }
+
+    public BigDecimal consultarServicoRelacionadoPartname(BigDecimal partname) {
 
         JdbcWrapper jdbc = null;
         NativeSql sql = null;
         ResultSet rset = null;
-        JapeSession.SessionHandle hnd = null;
-        BigDecimal pkServico = BigDecimal.ZERO;
-
+        BigDecimal servico = BigDecimal.ZERO;
         try {
-            hnd = JapeSession.open();
-            hnd.setFindersMaxRows(-1);
             EntityFacade entity = EntityFacadeFactory.getDWFFacade();
             jdbc = entity.getJdbcWrapper();
             jdbc.openSession();
-
             sql = new NativeSql(jdbc);
 
-            sql.appendSql("SELECT NVL(MAX(CODSERV),0) + 1 AS PRIMARYKEY FROM AD_SERVICOS WHERE ID = :CODOS");
-
-            sql.setNamedParameter("CODOS", codOs);
+            sql.appendSql("SELECT CODPROD FROM TGFPRO WHERE CODGRUPOPROD = :PARTNAME");
+            sql.setNamedParameter("PARTNAME", partname);
 
             rset = sql.executeQuery();
 
             if (rset.next()) {
-                pkServico = rset.getBigDecimal("PRIMARYKEY");
+                servico = rset.getBigDecimal("CODPROD");
             }
 
         } catch (Exception e) {
@@ -48,49 +64,9 @@ public class ServicosRepository {
             JdbcUtils.closeResultSet(rset);
             NativeSql.releaseResources(sql);
             JdbcWrapper.closeSession(jdbc);
-            JapeSession.close(hnd);
-
         }
 
-        return pkServico;
-
-    }
-
-    public void lancarServico(BigDecimal codOs, BigDecimal codPartname) {
-        System.out.println("Lançando serviço de substituição...");
-
-        JdbcWrapper jdbc = null;
-        NativeSql sql = null;
-        JapeSession.SessionHandle hnd = null;
-
-        try {
-            hnd = JapeSession.open();
-            hnd.setFindersMaxRows(-1);
-            EntityFacade entity = EntityFacadeFactory.getDWFFacade();
-            jdbc = entity.getJdbcWrapper();
-            jdbc.openSession();
-
-            sql = new NativeSql(jdbc);
-
-            sql.appendSql("INSERT INTO AD_SERVICOS (CODSERV,ID, CODPARTNAME, CODPROD, QTD) VALUES (:CODSERV,:ID, :CODPARTNAME, :CODPROD, :QTD)");
-            sql.setNamedParameter("ID", codOs);
-            sql.setNamedParameter("CODPARTNAME", codPartname);
-            sql.setNamedParameter("CODPROD", substituicao);
-            sql.setNamedParameter("QTD", BigDecimal.ONE);
-            sql.setNamedParameter("CODSERV", encontrarPkServicos(codOs));
-
-
-            sql.executeUpdate();
-            sql.executeUpdate("COMMIT");
-
-        } catch (Exception e) {
-            Utils.logarErro(e);
-        } finally {
-            NativeSql.releaseResources(sql);
-            JdbcWrapper.closeSession(jdbc);
-            JapeSession.close(hnd);
-
-        }
+        return servico;
     }
 
     public BigDecimal quantidadeFinalizados(BigDecimal idOs) {

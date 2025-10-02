@@ -39,6 +39,9 @@ public class EventDecisaoPartname implements EventoProgramavelJava {
         BigDecimal os = partnameVO.asBigDecimal("ID");
         BigDecimal codPartname = partnameVO.asBigDecimal("CODPARTNAME");
 
+        BigDecimal substituicao = new BigDecimal(24);
+
+
         ServicosRepository servicosRepository = new ServicosRepository();
         ControleOsRepository controleOsRepository = new ControleOsRepository();
 
@@ -46,7 +49,7 @@ public class EventDecisaoPartname implements EventoProgramavelJava {
             System.out.println("Decisao: " + decisao);
             System.out.println("OS: " + os);
             System.out.println("CodPartname: " + codPartname);
-            servicosRepository.lancarServico(os, codPartname);
+            servicosRepository.lancarServico(os, codPartname, substituicao);
         }
 
         if (decisao != null && decisao.compareTo(new BigDecimal(1)) == 0) {

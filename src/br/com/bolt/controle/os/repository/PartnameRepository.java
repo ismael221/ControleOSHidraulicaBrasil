@@ -43,45 +43,6 @@ public class PartnameRepository {
         }
     }
 
-    public BigDecimal encontrarPkPartnames(BigDecimal codOs) {
-
-        JdbcWrapper jdbc = null;
-        NativeSql sql = null;
-        ResultSet rset = null;
-        BigDecimal pkPartname = BigDecimal.ZERO;
-
-        try {
-            hnd = JapeSession.open();
-            hnd.setFindersMaxRows(-1);
-            EntityFacade entity = EntityFacadeFactory.getDWFFacade();
-            jdbc = entity.getJdbcWrapper();
-            jdbc.openSession();
-
-            sql = new NativeSql(jdbc);
-
-            sql.appendSql("SELECT NVL(MAX(CODPARTNAME),0) + 1 AS PRIMARYKEY FROM AD_PARTNAME WHERE ID = :CODOS");
-
-            sql.setNamedParameter("CODOS", codOs);
-
-            rset = sql.executeQuery();
-
-            if (rset.next()) {
-                pkPartname = rset.getBigDecimal("PRIMARYKEY");
-            }
-
-        } catch (Exception e) {
-            Utils.logarErro(e);
-        } finally {
-            JdbcUtils.closeResultSet(rset);
-            NativeSql.releaseResources(sql);
-            JdbcWrapper.closeSession(jdbc);
-            JapeSession.close(hnd);
-
-        }
-
-        return pkPartname;
-
-    }
 
     public List<Partname> encontrarPartnames(BigDecimal macrogrupo) {
         JdbcWrapper jdbc = null;
