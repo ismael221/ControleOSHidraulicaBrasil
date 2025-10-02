@@ -70,6 +70,7 @@ public class PartnameRepository {
                 Partname partname = new Partname();
                 partname.setPartname(rset.getBigDecimal("CODGRUPOPROD"));
                 partname.setOrdem(rset.getBigDecimal("ORDEM"));
+                partname.setDecisao(BigDecimal.ONE);
                 partname.setQuantidade(BigDecimal.ONE);
                 partnames.add(partname);
             }

@@ -29,9 +29,9 @@ public class AcaoAprovada implements AcaoRotinaJava {
 
             List<Partname> partnameList = new ArrayList();
 
-            Partname partname98 = new Partname(new BigDecimal(209990004), new BigDecimal(95), BigDecimal.ONE , new BigDecimal(6));
-            Partname partname99 = new Partname(new BigDecimal(209990005), new BigDecimal(96), BigDecimal.ONE,new BigDecimal(6));
-            Partname partname100 = new Partname(new BigDecimal(209990006), new BigDecimal(97), BigDecimal.ONE,new BigDecimal(6));
+            Partname partname98 = new Partname(new BigDecimal(209990004), new BigDecimal(95), BigDecimal.ONE, new BigDecimal(6));
+            Partname partname99 = new Partname(new BigDecimal(209990005), new BigDecimal(96), BigDecimal.ONE, new BigDecimal(6));
+            Partname partname100 = new Partname(new BigDecimal(209990006), new BigDecimal(97), BigDecimal.ONE, new BigDecimal(6));
 
             partnameList.add(partname98);
             partnameList.add(partname99);
