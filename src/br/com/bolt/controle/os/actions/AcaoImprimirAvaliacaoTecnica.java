@@ -1,4 +1,4 @@
-package br.com.bolt.controle.os.view;
+package br.com.bolt.controle.os.actions;
 
 import br.com.sankhya.extensions.actionbutton.AcaoRotinaJava;
 import br.com.sankhya.extensions.actionbutton.ContextoAcao;
@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AcaoImprimirOrcamento implements AcaoRotinaJava {
+public class AcaoImprimirAvaliacaoTecnica implements AcaoRotinaJava {
     @Override
     public void doAction(ContextoAcao contexto) throws Exception {
         BigDecimal nuRfe = new BigDecimal(177);

@@ -1,4 +1,4 @@
-package br.com.bolt.controle.os.view;
+package br.com.bolt.controle.os.actions;
 
 import br.com.sankhya.extensions.actionbutton.AcaoRotinaJava;
 import br.com.sankhya.extensions.actionbutton.ContextoAcao;

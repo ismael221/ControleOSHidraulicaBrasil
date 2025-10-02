@@ -1,11 +1,10 @@
-package br.com.bolt.controle.os.view;
+package br.com.bolt.controle.os.actions;
 
 import br.com.bolt.controle.os.enums.StatusOS;
 import br.com.bolt.controle.os.repository.ControleOsRepository;
 import br.com.sankhya.extensions.actionbutton.AcaoRotinaJava;
 import br.com.sankhya.extensions.actionbutton.ContextoAcao;
 import br.com.sankhya.extensions.actionbutton.Registro;
-import br.com.sankhya.modelcore.exportadorrelatorio.RelatorioFormatado;
 
 import java.math.BigDecimal;
 import java.util.List;

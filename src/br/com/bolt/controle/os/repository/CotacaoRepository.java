@@ -7,6 +7,9 @@ import br.com.sankhya.jape.EntityFacade;
 import br.com.sankhya.jape.core.JapeSession;
 import br.com.sankhya.jape.dao.JdbcWrapper;
 import br.com.sankhya.jape.sql.NativeSql;
+import br.com.sankhya.jape.vo.DynamicVO;
+import br.com.sankhya.jape.wrapper.JapeFactory;
+import br.com.sankhya.jape.wrapper.JapeWrapper;
 import br.com.sankhya.modelcore.util.EntityFacadeFactory;
 import com.sankhya.util.JdbcUtils;
 
@@ -20,11 +23,12 @@ import java.util.Map;
 
 public class CotacaoRepository {
 
+    JapeSession.SessionHandle hnd = null;
+
     public ArrayList<Cotacao> encontrarCotacoes(BigDecimal idOS) {
         JdbcWrapper jdbc = null;
         NativeSql sql = null;
         ResultSet rset = null;
-        JapeSession.SessionHandle hnd = null;
         Map<ChaveAgrupamento, Cotacao> agrupamentoMap = new LinkedHashMap<>();
 
         try {
@@ -98,45 +102,27 @@ public class CotacaoRepository {
 
     public void salvarCotacao(Cotacao cotacao) {
         System.out.println("Salvando cotação ...");
-
-        JdbcWrapper jdbc = null;
-        NativeSql sql = null;
-        JapeSession.SessionHandle hnd = null;
-
         try {
             hnd = JapeSession.open();
-            hnd.setFindersMaxRows(-1);
-            EntityFacade entity = EntityFacadeFactory.getDWFFacade();
-            jdbc = entity.getJdbcWrapper();
-            jdbc.openSession();
-
-            sql = new NativeSql(jdbc);
-
-            sql.appendSql("INSERT INTO AD_COTACAOOS " +
-                    "(CODCOT,CODPROD,DESCR,QTD,DIAMEINTER,DIAMEINTER,DIAMENEXTER,COMPRIMENTO,NUNOTA,OSS,CODPRODMAT,CONTROLE,APROVADO,TIPCOT,FORNECEDOR,PRAZOENTREGA,VLRUNIT,VLRTOTAL,MARGEM,VLRVENDAUNIT,VLRVENDAUNIT,VLRVENDATOTAL,CODOS,PARTNAME) " +
-                    "VALUES (:CODCOT,:CODPROD,:DESCR,:QTD,:DIAMEINTER,:DIAMEINTER,:DIAMENEXTER,:COMPRIMENTO,:NUNOTA,:OSS,:CODPRODMAT,:CONTROLE,:APROVADO,:TIPCOT,:FORNECEDOR,:PRAZOENTREGA,:VLRUNIT,:VLRTOTAL,:MARGEM,:VLRVENDAUNIT,:VLRVENDAUNIT,:VLRVENDATOTAL,:CODOS,:PARTNAME)");
-
-            System.out.println(sql);
-            sql.setNamedParameter("CODCOT", encontrarPkCotacao());
-            sql.setNamedParameter("CODPROD", cotacao.getCodProduto());
-            sql.setNamedParameter("DESCR", cotacao.getDescricao());
-            //TODO Finalizar parametros
-
-            sql.executeUpdate();
-            sql.executeUpdate("COMMIT");
+            JapeWrapper cotacaoDAO = JapeFactory.dao("AD_COTACAOOS");
+            DynamicVO save = cotacaoDAO.create()
+                    .set("CODPROD", cotacao.getCodProduto())
+                    .set("DESCR", cotacao.getDescricao())
+                    .set("QTD", cotacao.getQuantidade())
+                    .set("DIAMEINTER", cotacao.getDiameInterno())
+                    .set("CODOS", cotacao.getNumeroOS())
+                    .set("PARTNAME", cotacao.getPartname())
+                    .save();
 
         } catch (Exception e) {
             Utils.logarErro(e);
         } finally {
-            NativeSql.releaseResources(sql);
-            JdbcWrapper.closeSession(jdbc);
             JapeSession.close(hnd);
-
         }
+
     }
 
     public BigDecimal encontrarPkCotacao() {
-        JapeSession.SessionHandle hnd = null;
         JdbcWrapper jdbc = null;
         BigDecimal codCotacao = BigDecimal.ZERO;
 

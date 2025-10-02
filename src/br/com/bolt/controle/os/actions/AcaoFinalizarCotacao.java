@@ -1,4 +1,4 @@
-package br.com.bolt.controle.os.view;
+package br.com.bolt.controle.os.actions;
 
 import br.com.bolt.controle.os.enums.StatusOS;
 import br.com.bolt.controle.os.repository.ControleOsRepository;

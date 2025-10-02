@@ -1,4 +1,4 @@
-package br.com.bolt.controle.os.view;
+package br.com.bolt.controle.os.actions;
 
 import br.com.bolt.controle.os.enums.StatusOS;
 import br.com.bolt.controle.os.repository.ControleOsRepository;
@@ -8,15 +8,14 @@ import br.com.sankhya.extensions.actionbutton.Registro;
 
 import java.math.BigDecimal;
 
-public class AcaoOsNaoAprovada implements AcaoRotinaJava {
+public class AcaoIniciarNegociacao implements AcaoRotinaJava {
     @Override
     public void doAction(ContextoAcao contexto) throws Exception {
         Registro[] linhas = contexto.getLinhas();
         ControleOsRepository controleOsRepository = new ControleOsRepository();
         for (Registro linha : linhas) {
             BigDecimal codOs = (BigDecimal) linha.getCampo("ID");
-            String motivo = (String) linha.getCampo("MOTIVO");
-            controleOsRepository.atualizarMotivoNaoAprovacao(codOs, motivo, StatusOS.DEVOLVER.getCodigo());
+            controleOsRepository.atualizarStatusOSByPK(codOs, StatusOS.NEGOCIACAO.getCodigo());
         }
     }
 }

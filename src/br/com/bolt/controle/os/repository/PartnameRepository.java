@@ -17,6 +17,8 @@ import java.util.List;
 
 public class PartnameRepository {
 
+    JapeSession.SessionHandle hnd = null;
+
     public void inserirPartname(Partname partname, BigDecimal codOs) {
         System.out.println("Inserindo partname " + partname + "na OS " + codOs);
         JdbcWrapper jdbc = null;

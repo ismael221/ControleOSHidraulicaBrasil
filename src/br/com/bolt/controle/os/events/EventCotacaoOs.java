@@ -1,4 +1,4 @@
-package br.com.bolt.controle.os.view;
+package br.com.bolt.controle.os.events;
 
 import br.com.bolt.controle.os.model.Cotacao;
 import br.com.bolt.controle.os.repository.CotacaoRepository;

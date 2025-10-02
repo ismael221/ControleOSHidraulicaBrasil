@@ -1,4 +1,4 @@
-package br.com.bolt.controle.os.view;
+package br.com.bolt.controle.os.actions;
 
 import br.com.bolt.controle.os.model.OrdemDeServico;
 import br.com.bolt.controle.os.repository.ControleOsRepository;

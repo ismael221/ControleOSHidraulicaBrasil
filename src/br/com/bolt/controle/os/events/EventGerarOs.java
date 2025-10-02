@@ -1,16 +1,13 @@
-package br.com.bolt.controle.os.view;
+package br.com.bolt.controle.os.events;
 
 import br.com.bolt.controle.os.model.OrdemDeServico;
-import br.com.bolt.controle.os.model.Partname;
 import br.com.bolt.controle.os.repository.OrdemDeServicoRepository;
-import br.com.bolt.controle.os.repository.PartnameRepository;
 import br.com.sankhya.extensions.eventoprogramavel.EventoProgramavelJava;
 import br.com.sankhya.jape.event.PersistenceEvent;
 import br.com.sankhya.jape.event.TransactionContext;
 import br.com.sankhya.jape.vo.DynamicVO;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 public class EventGerarOs implements EventoProgramavelJava {
