@@ -22,23 +22,25 @@ public class HistoricoOsService {
     public void salvarRegistro(String novoStatus, String statusOld, BigDecimal numos, BigDecimal codUsu) throws MGEModelException {
         HistoricoOs historicoOs = historicoOsRepository.consultarHistorico(numos);
 
-        if (historicoOs == null || novoStatus.isEmpty()) {
+        if (historicoOs == null) {
             historicoOs = new HistoricoOs();
-            historicoOs.setDtAlter(Timestamp.from(Instant.now()));
-            historicoOs.setCodUsu(codUsu);
-            historicoOs.setIdOS(numos);
-            historicoOs.setDescricao("Criação da OS");
-        } else {
-            historicoOs.setDtAlter(Timestamp.from(Instant.now()));
-            historicoOs.setCodUsu(codUsu);
-            historicoOs.setIdOS(numos);
-            if (statusOld == null || statusOld.isEmpty()) {
-                historicoOs.setDescricao("Criação da OS");
-            }else{
-                historicoOs.setDescricao("De " + statusOld + " -> Para " + novoStatus);
-            }
         }
+
+        historicoOs.setDtAlter(Timestamp.from(Instant.now()));
+        historicoOs.setCodUsu(codUsu);
+        historicoOs.setIdOS(numos);
+
+        if (isNullOrEmpty(statusOld) || isNullOrEmpty(novoStatus)) {
+            historicoOs.setDescricao("OS Gerada, status inicial: Entendendo demanda");
+        } else {
+            historicoOs.setDescricao("De " + statusOld + " -> Para " + novoStatus);
+        }
+
         historicoOsRepository.salvarHistorico(historicoOs);
+    }
+
+    private boolean isNullOrEmpty(String value) {
+        return value == null || value.trim().isEmpty();
     }
 
     public String consultarDescricaoStatus(BigDecimal numos) throws MGEModelException {

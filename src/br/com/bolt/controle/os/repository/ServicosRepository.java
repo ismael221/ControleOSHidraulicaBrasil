@@ -26,7 +26,7 @@ public class ServicosRepository {
             DynamicVO save = servicoDAO.create()
                     .set("ID", codOs)
                     .set("CODPARTNAME", codPartname)
-                    .set("CODSERV", encontrarPkServicos(codOs))
+                    .set("CODSERV", encontrarPkServicos(codOs, codPartname))
                     .set("CODPROD", codProd)
                     .set("QTD", BigDecimal.ONE)
                     .save();
@@ -38,7 +38,7 @@ public class ServicosRepository {
         }
     }
 
-    public BigDecimal encontrarPkServicos(BigDecimal codOs) {
+    public BigDecimal encontrarPkServicos(BigDecimal codOs, BigDecimal codPartname) {
         JdbcWrapper jdbc = null;
         NativeSql sql = null;
         ResultSet rset = null;
@@ -53,9 +53,10 @@ public class ServicosRepository {
 
             sql = new NativeSql(jdbc);
 
-            sql.appendSql("SELECT NVL(MAX(CODSERV),0) + 1 AS PRIMARYKEY FROM AD_SERVICOS WHERE ID = :CODOS");
+            sql.appendSql("SELECT NVL(MAX(CODSERV),0) + 1 AS PRIMARYKEY FROM AD_SERVICOS WHERE ID = :CODOS AND CODPARTNAME = :CODPARTNAME");
 
             sql.setNamedParameter("CODOS", codOs);
+            sql.setNamedParameter("CODPARTNAME", codPartname);
 
             rset = sql.executeQuery();
 
@@ -70,7 +71,6 @@ public class ServicosRepository {
             NativeSql.releaseResources(sql);
             JdbcWrapper.closeSession(jdbc);
             JapeSession.close(hnd);
-
         }
         return pkServico;
 
