@@ -26,6 +26,7 @@ public class EventServicosDoPartname implements EventoProgramavelJava {
 
     @Override
     public void afterInsert(PersistenceEvent event) throws Exception {
+        System.out.println("EventServicosDoPartname::afterInsert");
         DynamicVO partnameVO = (DynamicVO) event.getVo();
 
         ServicosRepository servicosRepository = new ServicosRepository();

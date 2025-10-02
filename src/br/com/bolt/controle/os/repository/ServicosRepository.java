@@ -26,6 +26,7 @@ public class ServicosRepository {
             DynamicVO save = servicoDAO.create()
                     .set("ID", codOs)
                     .set("CODPARTNAME", codPartname)
+                    .set("CODSERV", encontrarPkServicos(codOs))
                     .set("CODPROD", codProd)
                     .set("QTD", BigDecimal.ONE)
                     .save();
@@ -35,6 +36,44 @@ public class ServicosRepository {
         } finally {
             JapeSession.close(hnd);
         }
+    }
+
+    public BigDecimal encontrarPkServicos(BigDecimal codOs) {
+        JdbcWrapper jdbc = null;
+        NativeSql sql = null;
+        ResultSet rset = null;
+        BigDecimal pkServico = BigDecimal.ZERO;
+
+        try {
+            hnd = JapeSession.open();
+            hnd.setFindersMaxRows(-1);
+            EntityFacade entity = EntityFacadeFactory.getDWFFacade();
+            jdbc = entity.getJdbcWrapper();
+            jdbc.openSession();
+
+            sql = new NativeSql(jdbc);
+
+            sql.appendSql("SELECT NVL(MAX(CODSERV),0) + 1 AS PRIMARYKEY FROM AD_SERVICOS WHERE ID = :CODOS");
+
+            sql.setNamedParameter("CODOS", codOs);
+
+            rset = sql.executeQuery();
+
+            if (rset.next()) {
+                pkServico = rset.getBigDecimal("PRIMARYKEY");
+            }
+
+        } catch (Exception e) {
+            Utils.logarErro(e);
+        } finally {
+            JdbcUtils.closeResultSet(rset);
+            NativeSql.releaseResources(sql);
+            JdbcWrapper.closeSession(jdbc);
+            JapeSession.close(hnd);
+
+        }
+        return pkServico;
+
     }
 
     public BigDecimal consultarServicoRelacionadoPartname(BigDecimal partname) {
