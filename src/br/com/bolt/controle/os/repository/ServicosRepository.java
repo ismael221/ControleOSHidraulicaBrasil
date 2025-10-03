@@ -19,6 +19,7 @@ public class ServicosRepository {
     JapeSession.SessionHandle hnd = null;
 
     public void lancarServico(BigDecimal codOs, BigDecimal codPartname, BigDecimal codProd) {
+
         System.out.println("Lançando serviço de substituição...");
         try {
             hnd = JapeSession.open();

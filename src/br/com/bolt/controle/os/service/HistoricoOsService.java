@@ -17,30 +17,53 @@ import java.time.Instant;
 
 public class HistoricoOsService {
 
+    private static final org.slf4j.Logger logger = org.slf4j.LoggerFactory.getLogger(HistoricoOsService.class);
+
     private final HistoricoOsRepository historicoOsRepository = new HistoricoOsRepository();
 
     public void salvarRegistro(String novoStatus, String statusOld, BigDecimal numos, BigDecimal codUsu) throws MGEModelException {
-        HistoricoOs historicoOs = historicoOsRepository.consultarHistorico(numos);
+        logger.info("salvarRegistro: numos={}, statusOld='{}', novoStatus='{}'", numos, statusOld, novoStatus);
 
-        if (historicoOs == null) {
-            historicoOs = new HistoricoOs();
+        try {
+            HistoricoOs historicoOs = historicoOsRepository.consultarHistorico(numos);
+            boolean isNew = (historicoOs == null);
+            if (isNew) {
+                historicoOs = new HistoricoOs();
+            }
+
+            historicoOs.setDtAlter(new java.sql.Timestamp(System.currentTimeMillis()));
+            historicoOs.setCodUsu(codUsu);
+            historicoOs.setIdOS(numos);
+
+            String descricao;
+            if (isNullOrEmpty(statusOld)) {
+                // se não existir statusOld considero criação (você pode ajustar esta regra)
+                descricao = "OS Gerada, status inicial Entendendo demanda";
+            } else if (isNullOrEmpty(novoStatus)) {
+                descricao = "Alteração: de " + statusOld.trim() + " (novo status vazio)";
+            } else {
+                descricao = "De " + statusOld.trim() + " -> Para " + novoStatus.trim();
+            }
+            historicoOs.setDescricao(descricao);
+
+            historicoOsRepository.salvarHistorico(historicoOs);
+
+            // Verificação imediata para ajudar no debug
+            HistoricoOs salvo = historicoOsRepository.consultarHistorico(numos);
+            if (salvo == null) {
+                logger.error("Após chamar salvarHistorico, consultarHistorico retornou null — verificar salvarHistorico/transações.");
+            } else {
+                logger.info("Historico salvo com sucesso. descricao='{}'", salvo.getDescricao());
+            }
+        } catch (Exception e) {
+            logger.error("Erro ao salvar historico", e);
+            if (e instanceof MGEModelException) throw (MGEModelException) e;
+            throw new MGEModelException(e);
         }
-
-        historicoOs.setDtAlter(Timestamp.from(Instant.now()));
-        historicoOs.setCodUsu(codUsu);
-        historicoOs.setIdOS(numos);
-
-        if (isNullOrEmpty(statusOld) || isNullOrEmpty(novoStatus)) {
-            historicoOs.setDescricao("OS Gerada, status inicial: Entendendo demanda");
-        } else {
-            historicoOs.setDescricao("De " + statusOld + " -> Para " + novoStatus);
-        }
-
-        historicoOsRepository.salvarHistorico(historicoOs);
     }
 
-    private boolean isNullOrEmpty(String value) {
-        return value == null || value.trim().isEmpty();
+    private boolean isNullOrEmpty(String s) {
+        return s == null || s.trim().isEmpty();
     }
 
     public String consultarDescricaoStatus(BigDecimal numos) throws MGEModelException {
@@ -48,7 +71,7 @@ public class HistoricoOsService {
         NativeSql sql = null;
         ResultSet rset = null;
         JapeSession.SessionHandle hnd = null;
-        String descricao = "";
+        String descricao = null;
 
         try {
             hnd = JapeSession.open();

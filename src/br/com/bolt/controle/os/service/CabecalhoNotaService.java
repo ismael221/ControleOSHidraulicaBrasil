@@ -1,10 +1,13 @@
 package br.com.bolt.controle.os.service;
 
+import br.com.bolt.controle.os.util.Utils;
 import br.com.sankhya.jape.EntityFacade;
 import br.com.sankhya.jape.sql.NativeSql;
 import br.com.sankhya.jape.util.JapeSessionContext;
 import br.com.sankhya.jape.vo.DynamicVO;
 import br.com.sankhya.jape.vo.PrePersistEntityState;
+import br.com.sankhya.modelcore.PlatformService;
+import br.com.sankhya.modelcore.PlatformServiceFactory;
 import br.com.sankhya.modelcore.auth.AuthenticationInfo;
 import br.com.sankhya.modelcore.comercial.BarramentoRegra;
 import br.com.sankhya.modelcore.comercial.centrais.CACHelper;
@@ -13,6 +16,8 @@ import br.com.sankhya.modelcore.util.EntityFacadeFactory;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 
 public class CabecalhoNotaService {
 
@@ -110,4 +115,38 @@ public class CabecalhoNotaService {
         cacHelper.incluirAlterarItem(nunota, authInfo, itensUnitario, true);
 
     }
+
+    public void confirmarNota(BigDecimal nunota) {
+        try {
+            PlatformService confirmaNotaService = PlatformServiceFactory.getInstance().lookupService("@core:confirmacao.nota.service");
+
+            confirmaNotaService.set("NUNOTA", nunota);
+            confirmaNotaService.set("CODUSUAUTHINFO", BigDecimal.ZERO);
+
+            confirmaNotaService.execute();
+        } catch (Exception e) {
+            Utils.logarErro(e);
+        }
+    }
+
+
+    public void faturarNota(Collection<BigDecimal> notasParaFaturamento) {
+        try {
+            PlatformService faturaNotaService = PlatformServiceFactory.getInstance().lookupService("@core:faturamento.service");
+            faturaNotaService.set("NUNOTA", BigDecimal.valueOf(20016));
+            faturaNotaService.set("NUNOTACOLLECTION", notasParaFaturamento);
+            faturaNotaService.set("CODTIPOPER", BigDecimal.valueOf(100));
+            faturaNotaService.set("DTENTRADASAIDA", new Timestamp(System.currentTimeMillis()));
+            faturaNotaService.set("HRENTRADASAIDA", new Timestamp(System.currentTimeMillis()));
+            faturaNotaService.set("DTFATURAMENTO", new Timestamp(System.currentTimeMillis()));
+            faturaNotaService.set("SERIE", "1");
+            faturaNotaService.set("CODUSUAUTHINFO", BigDecimal.ZERO);
+
+            faturaNotaService.execute();
+        } catch (Exception e) {
+            Utils.logarErro(e);
+        }
+    }
+
+
 }

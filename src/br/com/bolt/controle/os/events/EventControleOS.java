@@ -2,7 +2,9 @@ package br.com.bolt.controle.os.events;
 
 import br.com.bolt.controle.os.model.Partname;
 import br.com.bolt.controle.os.repository.PartnameRepository;
+import br.com.bolt.controle.os.repository.ServicosRepository;
 import br.com.sankhya.extensions.eventoprogramavel.EventoProgramavelJava;
+import br.com.sankhya.jape.core.JapeSession;
 import br.com.sankhya.jape.event.PersistenceEvent;
 import br.com.sankhya.jape.event.TransactionContext;
 import br.com.sankhya.jape.vo.DynamicVO;
@@ -30,6 +32,7 @@ public class EventControleOS implements EventoProgramavelJava {
     public void afterInsert(PersistenceEvent event) throws Exception {
         System.out.println("EventControleOs.afterInsert");
         PartnameRepository partnameRepository = new PartnameRepository();
+        ServicosRepository servicosRepository = new ServicosRepository();
         DynamicVO cabecalhoOSVo = (DynamicVO) event.getVo();
         BigDecimal macrogrupo = cabecalhoOSVo.asBigDecimal("CODMACROGRP");
         BigDecimal codOs = cabecalhoOSVo.asBigDecimal("ID");
@@ -37,7 +40,7 @@ public class EventControleOS implements EventoProgramavelJava {
         if (macrogrupo != null && macrogrupo.compareTo(BigDecimal.ZERO) != 0) {
             List<Partname> partnames = partnameRepository.encontrarPartnames(macrogrupo);
             for (Partname partname : partnames) {
-                partnameRepository.inserirPartname(partname, codOs);
+                BigDecimal codPartname = partnameRepository.inserirPartname(partname, codOs);
             }
         }
 

@@ -44,6 +44,8 @@ public class EventServicosDoPartname implements EventoProgramavelJava {
         if (servico.compareTo(BigDecimal.ZERO) > 0) {
             servicosRepository.lancarServico(codOs, partname, servico);
         }
+
+
     }
 
     @Override

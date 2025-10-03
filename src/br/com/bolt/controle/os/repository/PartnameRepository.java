@@ -22,8 +22,9 @@ public class PartnameRepository {
 
     JapeSession.SessionHandle hnd = null;
 
-    public void inserirPartname(Partname partname, BigDecimal codOs) {
+    public BigDecimal inserirPartname(Partname partname, BigDecimal codOs) {
         System.out.println("Inserindo partname " + partname + "na OS " + codOs);
+        BigDecimal retorno = BigDecimal.ZERO;
 
         try {
             hnd = JapeSession.open();
@@ -36,11 +37,14 @@ public class PartnameRepository {
                     .set("PARTNAME", partname.getPartname())
                     .save();
 
+            retorno = save.asBigDecimal("CODPARTNAME");
         } catch (Exception e) {
             Utils.logarErro(e);
         } finally {
             JapeSession.close(hnd);
         }
+
+        return retorno;
     }
 
 
