@@ -24,13 +24,15 @@ public class PartnameService {
             hnd = JapeSession.open();
             for (Partname partname : partnameList) {
                 retorno = partnameRepository.inserirPartname(partname, codOs);
+                BigDecimal servico = servicosRepository.resgatarServicoDoPartname(partname.getPartname()) != null
+                        ? servicosRepository.resgatarServicoDoPartname(partname.getPartname())
+                        : BigDecimal.ZERO;
+
+                System.out.println("Vai tentar lançar serviço para o partname: " + partname + " - " + servico);
+                servicosRepository.lancarServico(codOs, retorno, servico);
                 retornos.add(retorno);
             }
 
-            for (BigDecimal partname : retornos) {
-                System.out.println("Vai tentar lançar serviço para o partname: " + partname);
-                servicosRepository.lancarServico(codOs, partname, BigDecimal.ZERO);
-            }
         } catch (Exception e) {
             Utils.logarErro(e);
         } finally {

@@ -73,8 +73,8 @@ public class ServicosRepository {
 
     }
 
-    public BigDecimal consultarServicoRelacionadoPartname(BigDecimal partname) {
-
+    public BigDecimal resgatarServicoDoPartname(BigDecimal partname) {
+        System.out.println("Procurando serviço para o partname: " + partname);
         JdbcWrapper jdbc = null;
         NativeSql sql = null;
         ResultSet rset = null;
@@ -88,10 +88,13 @@ public class ServicosRepository {
             sql.appendSql("SELECT CODPROD FROM TGFPRO WHERE CODGRUPOPROD = :PARTNAME");
             sql.setNamedParameter("PARTNAME", partname);
 
+            System.out.println(sql);
+
             rset = sql.executeQuery();
 
             if (rset.next()) {
                 servico = rset.getBigDecimal("CODPROD");
+                System.out.println("Serviço encontrado " + servico);
             }
 
         } catch (Exception e) {

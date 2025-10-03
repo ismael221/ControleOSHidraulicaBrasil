@@ -3,6 +3,7 @@ package br.com.bolt.controle.os.events;
 import br.com.bolt.controle.os.enums.StatusOS;
 import br.com.bolt.controle.os.repository.ControleOsRepository;
 import br.com.bolt.controle.os.repository.ServicosRepository;
+import br.com.bolt.controle.os.service.ServicosService;
 import br.com.sankhya.extensions.eventoprogramavel.EventoProgramavelJava;
 import br.com.sankhya.jape.event.PersistenceEvent;
 import br.com.sankhya.jape.event.TransactionContext;
@@ -42,14 +43,14 @@ public class EventDecisaoPartname implements EventoProgramavelJava {
         BigDecimal substituicao = new BigDecimal(24);
 
 
-        ServicosRepository servicosRepository = new ServicosRepository();
+        ServicosService servicosService = new ServicosService();
         ControleOsRepository controleOsRepository = new ControleOsRepository();
 
         if (decisao != null && decisao.compareTo(new BigDecimal(2)) == 0) {
             System.out.println("Decisao: " + decisao);
             System.out.println("OS: " + os);
             System.out.println("CodPartname: " + codPartname);
-            servicosRepository.lancarServico(os, codPartname, substituicao);
+            servicosService.inserirServico(os, codPartname, substituicao);
         }
 
         if (decisao != null && decisao.compareTo(new BigDecimal(1)) == 0) {
