@@ -4,12 +4,12 @@ import br.com.bolt.controle.os.model.Componente;
 import br.com.bolt.controle.os.model.Partname;
 import br.com.bolt.controle.os.util.Utils;
 import br.com.sankhya.jape.EntityFacade;
+import br.com.sankhya.jape.bmp.PersistentLocalEntity;
 import br.com.sankhya.jape.core.JapeSession;
 import br.com.sankhya.jape.dao.JdbcWrapper;
 import br.com.sankhya.jape.sql.NativeSql;
 import br.com.sankhya.jape.vo.DynamicVO;
-import br.com.sankhya.jape.wrapper.JapeFactory;
-import br.com.sankhya.jape.wrapper.JapeWrapper;
+import br.com.sankhya.jape.vo.EntityVO;
 import br.com.sankhya.modelcore.util.EntityFacadeFactory;
 import com.sankhya.util.JdbcUtils;
 
@@ -27,21 +27,20 @@ public class PartnameRepository {
         BigDecimal retorno = BigDecimal.ZERO;
 
         try {
-            hnd = JapeSession.open();
-            JapeWrapper partnameDAO = JapeFactory.dao("AD_PARTNAME");
-            DynamicVO save = partnameDAO.create()
-                    .set("ID", codOs)
-                    .set("ORDEM", partname.getOrdem())
-                    .set("DECISAO", partname.getDecisao())
-                    .set("QTD", partname.getQuantidade())
-                    .set("PARTNAME", partname.getPartname())
-                    .save();
+            EntityFacade dwfFacade = EntityFacadeFactory.getDWFFacade();
+            DynamicVO partnameVO = (DynamicVO) dwfFacade.getDefaultValueObjectInstance("AD_PARTNAME");
+            partnameVO.setProperty("ID", codOs);
+            partnameVO.setProperty("ORDEM", partname.getOrdem());
+            partnameVO.setProperty("DECISAO", partname.getDecisao());
+            partnameVO.setProperty("QTD", partname.getQuantidade());
+            partnameVO.setProperty("PARTNAME", partname.getPartname());
 
-            retorno = save.asBigDecimal("CODPARTNAME");
+            PersistentLocalEntity salvo = dwfFacade.createEntity("AD_PARTNAME", (EntityVO) partnameVO);
+            DynamicVO salvoVO = (DynamicVO) salvo.getValueObject();
+
+            retorno = salvoVO.asBigDecimal("CODPARTNAME");
         } catch (Exception e) {
             Utils.logarErro(e);
-        } finally {
-            JapeSession.close(hnd);
         }
 
         return retorno;

@@ -2,12 +2,12 @@ package br.com.bolt.controle.os.repository;
 
 import br.com.bolt.controle.os.util.Utils;
 import br.com.sankhya.jape.EntityFacade;
+import br.com.sankhya.jape.bmp.PersistentLocalEntity;
 import br.com.sankhya.jape.core.JapeSession;
 import br.com.sankhya.jape.dao.JdbcWrapper;
 import br.com.sankhya.jape.sql.NativeSql;
 import br.com.sankhya.jape.vo.DynamicVO;
-import br.com.sankhya.jape.wrapper.JapeFactory;
-import br.com.sankhya.jape.wrapper.JapeWrapper;
+import br.com.sankhya.jape.vo.EntityVO;
 import br.com.sankhya.modelcore.util.EntityFacadeFactory;
 import com.sankhya.util.JdbcUtils;
 
@@ -19,23 +19,19 @@ public class ServicosRepository {
     JapeSession.SessionHandle hnd = null;
 
     public void lancarServico(BigDecimal codOs, BigDecimal codPartname, BigDecimal codProd) {
-
-        System.out.println("Lançando serviço de substituição...");
+        System.out.println("Lançando serviço ...");
         try {
-            hnd = JapeSession.open();
-            JapeWrapper servicoDAO = JapeFactory.dao("AD_SERVICOS");
-            DynamicVO save = servicoDAO.create()
-                    .set("ID", codOs)
-                    .set("CODPARTNAME", codPartname)
-                    .set("CODSERV", encontrarPkServicos(codOs, codPartname))
-                    .set("CODPROD", codProd)
-                    .set("QTD", BigDecimal.ONE)
-                    .save();
+            EntityFacade dwfFacade = EntityFacadeFactory.getDWFFacade();
+            DynamicVO servicoVO = (DynamicVO) dwfFacade.getDefaultValueObjectInstance("AD_SERVICOS");
+            servicoVO.setProperty("ID", codOs);
+            servicoVO.setProperty("CODPARTNAME", codPartname);
+            servicoVO.setProperty("CODPROD", codProd);
+            servicoVO.setProperty("QTD", BigDecimal.ONE);
 
+            PersistentLocalEntity salvo = dwfFacade.createEntity("AD_SERVICOS", (EntityVO) servicoVO);
+            DynamicVO salvoVO = (DynamicVO) salvo.getValueObject();
         } catch (Exception e) {
             Utils.logarErro(e);
-        } finally {
-            JapeSession.close(hnd);
         }
     }
 

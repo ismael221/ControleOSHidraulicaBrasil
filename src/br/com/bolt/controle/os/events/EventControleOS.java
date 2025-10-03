@@ -3,6 +3,7 @@ package br.com.bolt.controle.os.events;
 import br.com.bolt.controle.os.model.Partname;
 import br.com.bolt.controle.os.repository.PartnameRepository;
 import br.com.bolt.controle.os.repository.ServicosRepository;
+import br.com.bolt.controle.os.service.PartnameService;
 import br.com.sankhya.extensions.eventoprogramavel.EventoProgramavelJava;
 import br.com.sankhya.jape.core.JapeSession;
 import br.com.sankhya.jape.event.PersistenceEvent;
@@ -10,6 +11,7 @@ import br.com.sankhya.jape.event.TransactionContext;
 import br.com.sankhya.jape.vo.DynamicVO;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 public class EventControleOS implements EventoProgramavelJava {
@@ -33,14 +35,21 @@ public class EventControleOS implements EventoProgramavelJava {
         System.out.println("EventControleOs.afterInsert");
         PartnameRepository partnameRepository = new PartnameRepository();
         ServicosRepository servicosRepository = new ServicosRepository();
+        PartnameService partnameService = new PartnameService();
         DynamicVO cabecalhoOSVo = (DynamicVO) event.getVo();
         BigDecimal macrogrupo = cabecalhoOSVo.asBigDecimal("CODMACROGRP");
         BigDecimal codOs = cabecalhoOSVo.asBigDecimal("ID");
 
         if (macrogrupo != null && macrogrupo.compareTo(BigDecimal.ZERO) != 0) {
             List<Partname> partnames = partnameRepository.encontrarPartnames(macrogrupo);
+            List<BigDecimal> lancados = new ArrayList<>();
             for (Partname partname : partnames) {
-                BigDecimal codPartname = partnameRepository.inserirPartname(partname, codOs);
+                BigDecimal codPartname = partnameService.lancarPartname(partname, codOs);
+                lancados.add(codPartname);
+            }
+
+            for (BigDecimal lancado : lancados) {
+                System.out.println("Partname commitado: " + lancado);
             }
         }
 

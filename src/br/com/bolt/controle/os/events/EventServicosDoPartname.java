@@ -26,24 +26,24 @@ public class EventServicosDoPartname implements EventoProgramavelJava {
 
     @Override
     public void afterInsert(PersistenceEvent event) throws Exception {
-        System.out.println("EventServicosDoPartname::afterInsert");
-        DynamicVO partnameVO = (DynamicVO) event.getVo();
-
-        ServicosRepository servicosRepository = new ServicosRepository();
-
-        BigDecimal codOs = partnameVO.asBigDecimal("ID");
-
-        BigDecimal partname = partnameVO.asBigDecimal("PARTNAME") != null
-                ? partnameVO.asBigDecimal("PARTNAME")
-                : BigDecimal.ZERO;
-
-        BigDecimal servico = servicosRepository.consultarServicoRelacionadoPartname(partname) != null
-                ? servicosRepository.consultarServicoRelacionadoPartname(partname)
-                : BigDecimal.ZERO;
-
-        if (servico.compareTo(BigDecimal.ZERO) > 0) {
-            servicosRepository.lancarServico(codOs, partname, servico);
-        }
+//        System.out.println("EventServicosDoPartname::afterInsert");
+//        DynamicVO partnameVO = (DynamicVO) event.getVo();
+//
+//        ServicosRepository servicosRepository = new ServicosRepository();
+//
+//        BigDecimal codOs = partnameVO.asBigDecimal("ID");
+//
+//        BigDecimal partname = partnameVO.asBigDecimal("PARTNAME") != null
+//                ? partnameVO.asBigDecimal("PARTNAME")
+//                : BigDecimal.ZERO;
+//
+//        BigDecimal servico = servicosRepository.consultarServicoRelacionadoPartname(partname) != null
+//                ? servicosRepository.consultarServicoRelacionadoPartname(partname)
+//                : BigDecimal.ZERO;
+//
+//        if (servico.compareTo(BigDecimal.ZERO) > 0) {
+//            servicosRepository.lancarServico(codOs, partname, servico);
+//        }
 
 
     }
