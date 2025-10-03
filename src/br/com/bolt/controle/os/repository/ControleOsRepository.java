@@ -173,7 +173,8 @@ public class ControleOsRepository {
 
     }
 
-    public void criarNovaOs(OrdemDeServico ordemDeServico) {
+    public BigDecimal criarNovaOs(OrdemDeServico ordemDeServico) {
+        BigDecimal codOs = BigDecimal.ZERO;
         try {
             EntityFacade dwfFacade = EntityFacadeFactory.getDWFFacade();
 
@@ -194,9 +195,11 @@ public class ControleOsRepository {
 
             PersistentLocalEntity salvo = dwfFacade.createEntity("AD_CONTROLEOS", (EntityVO) osVO);
             DynamicVO salvoVO = (DynamicVO) salvo.getValueObject();
+            codOs = salvoVO.asBigDecimal("ID");
         } catch (Exception e) {
             Utils.logarErro(e);
         }
+        return codOs;
     }
 
 
