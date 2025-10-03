@@ -1,13 +1,18 @@
 package br.com.bolt.controle.os.events;
 
+import br.com.bolt.controle.os.model.HistoricoOs;
 import br.com.bolt.controle.os.model.OrdemDeServico;
+import br.com.bolt.controle.os.repository.HistoricoOsRepository;
 import br.com.bolt.controle.os.repository.OrdemDeServicoRepository;
+import br.com.bolt.controle.os.util.Utils;
 import br.com.sankhya.extensions.eventoprogramavel.EventoProgramavelJava;
 import br.com.sankhya.jape.event.PersistenceEvent;
 import br.com.sankhya.jape.event.TransactionContext;
 import br.com.sankhya.jape.vo.DynamicVO;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 
 public class EventGerarOs implements EventoProgramavelJava {
@@ -37,6 +42,7 @@ public class EventGerarOs implements EventoProgramavelJava {
         System.out.println("EventGerarOs.afterUpdate");
         DynamicVO cabecalhoVO = (DynamicVO) event.getVo();
         OrdemDeServicoRepository ordemDeServicoRepository = new OrdemDeServicoRepository();
+        HistoricoOsRepository historicoOsRepository = new HistoricoOsRepository();
         BigDecimal nunota = cabecalhoVO.asBigDecimal("NUNOTA");
         BigDecimal codParc = cabecalhoVO.asBigDecimal("CODPARC");
         String statusNota = cabecalhoVO.asString("STATUSNOTA");
@@ -69,7 +75,17 @@ public class EventGerarOs implements EventoProgramavelJava {
                 ordemDeServico.setChassi(chassi);
                 ordemDeServico.setFrota(frota);
                 ordemDeServico.setNumeroPedido(nuPedido);
-                ordemDeServicoRepository.salvarOrdensDeServico(ordemDeServico);
+                BigDecimal idOs = ordemDeServicoRepository.salvarOrdensDeServico(ordemDeServico);
+                HistoricoOs historicoOs = new HistoricoOs();
+                historicoOs.setIdOS(idOs);
+                historicoOs.setDescricao("OS Gerada, status inicial Entendendo demanda");
+                historicoOs.setDtAlter(Timestamp.from(Instant.now()));
+                historicoOs.setCodUsu(BigDecimal.ZERO);
+                try {
+                    historicoOsRepository.salvarHistorico(historicoOs);
+                } catch (Exception e) {
+                    Utils.logarErro(e);
+                }
                 System.out.println(ordemDeServico.toString());
             });
         }

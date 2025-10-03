@@ -72,9 +72,10 @@ public class OrdemDeServicoRepository {
         return ordemDeServicos;
     }
 
-    public void salvarOrdensDeServico(OrdemDeServico ordemDeServico) {
+    public BigDecimal salvarOrdensDeServico(OrdemDeServico ordemDeServico) {
         System.out.println("Salvando ordemDeServico: " + ordemDeServico.toString());
         JapeSession.SessionHandle hnd = null;
+        BigDecimal codOs = BigDecimal.ZERO;
         try {
             hnd = JapeSession.open();
             JapeWrapper empresaDAO = JapeFactory.dao("AD_CONTROLEOS");
@@ -87,16 +88,20 @@ public class OrdemDeServicoRepository {
                     .set("STATUS", ordemDeServico.getStatusOS())
                     .set("CODMACROGRP", ordemDeServico.getMacrogrupo())
                     .set("NUNOTA", ordemDeServico.getOrcamento())
-                    .set("CHASSI",ordemDeServico.getChassi())
+                    .set("CHASSI", ordemDeServico.getChassi())
                     .set("FROTA", ordemDeServico.getFrota())
                     .set("NUPEDIDO", ordemDeServico.getNumeroPedido())
                     .set("REVISAO", BigDecimal.ZERO)
                     .save();
+
+            codOs = save.asBigDecimal("ID");
 
         } catch (Exception e) {
             Utils.logarErro(e);
         } finally {
             JapeSession.close(hnd);
         }
+
+        return codOs;
     }
 }
