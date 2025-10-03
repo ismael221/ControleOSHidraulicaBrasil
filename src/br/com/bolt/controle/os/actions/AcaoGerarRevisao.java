@@ -3,6 +3,7 @@ package br.com.bolt.controle.os.actions;
 import br.com.bolt.controle.os.model.OrdemDeServico;
 import br.com.bolt.controle.os.repository.ControleOsRepository;
 import br.com.bolt.controle.os.repository.RevisaoRepository;
+import br.com.bolt.controle.os.service.ControleOsService;
 import br.com.sankhya.extensions.actionbutton.AcaoRotinaJava;
 import br.com.sankhya.extensions.actionbutton.ContextoAcao;
 import br.com.sankhya.extensions.actionbutton.QueryExecutor;
@@ -14,7 +15,7 @@ public class AcaoGerarRevisao implements AcaoRotinaJava {
     @Override
     public void doAction(ContextoAcao contexto) throws Exception {
         RevisaoRepository revisaoRepository = new RevisaoRepository();
-        ControleOsRepository controleOsRepository = new ControleOsRepository();
+        ControleOsService controleOsService = new ControleOsService();
         String justificativa = contexto.getParam("MOTIVO").toString();
         System.out.println("Justificativa da revisão: " + justificativa);
         Registro[] linhas = contexto.getLinhas();
@@ -42,7 +43,7 @@ public class AcaoGerarRevisao implements AcaoRotinaJava {
 
             query.close();
 
-            controleOsRepository.criarNovaOs(ordemDeServico);
+            controleOsService.criarNovaOs(ordemDeServico);
 
             StringBuffer mensagem = new StringBuffer();
             mensagem.append("Revisao realizado com sucesso!");
