@@ -7,7 +7,7 @@ public class Cotacao {
     private BigDecimal codProduto;
     private String descricao;
     private BigDecimal quantidade;
-    private Double diameInterno;
+    private BigDecimal diameInterno;
     private Double diameExterno;
     private String comprimento;
     private BigDecimal orcamento;
@@ -23,13 +23,13 @@ public class Cotacao {
     private Double margem;
     private Double vlrVendaUnitario;
     private Double vlrVendaTotal;
-    private String numeroOS;
+    private BigDecimal numeroOS;
 
 
     public Cotacao() {
     }
 
-    public Cotacao(BigDecimal partname, BigDecimal codProduto, String descricao, BigDecimal quantidade, Double diameInterno, Double diameExterno, String comprimento, BigDecimal orcamento, String oss, BigDecimal material, String controle, String aprovado, String tipoCotacao, BigDecimal fornecedor, BigDecimal prazoEntrega, Double vlrUnitario, Double vlrTotal, Double margem, Double vlrVendaUnitario, Double vlrVendaTotal, String numeroOS) {
+    public Cotacao(BigDecimal partname, BigDecimal codProduto, String descricao, BigDecimal quantidade, BigDecimal diameInterno, Double diameExterno, String comprimento, BigDecimal orcamento, String oss, BigDecimal material, String controle, String aprovado, String tipoCotacao, BigDecimal fornecedor, BigDecimal prazoEntrega, Double vlrUnitario, Double vlrTotal, Double margem, Double vlrVendaUnitario, Double vlrVendaTotal, BigDecimal numeroOS) {
         this.partname = partname;
         this.codProduto = codProduto;
         this.descricao = descricao;
@@ -85,11 +85,11 @@ public class Cotacao {
         this.quantidade = quantidade;
     }
 
-    public Double getDiameInterno() {
+    public BigDecimal getDiameInterno() {
         return diameInterno;
     }
 
-    public void setDiameInterno(Double diameInterno) {
+    public void setDiameInterno(BigDecimal diameInterno) {
         this.diameInterno = diameInterno;
     }
 
@@ -213,11 +213,11 @@ public class Cotacao {
         this.vlrVendaTotal = vlrVendaTotal;
     }
 
-    public String getNumeroOS() {
+    public BigDecimal getNumeroOS() {
         return numeroOS;
     }
 
-    public void setNumeroOS(String numeroOS) {
+    public void setNumeroOS(BigDecimal numeroOS) {
         this.numeroOS = numeroOS;
     }
 

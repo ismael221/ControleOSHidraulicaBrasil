@@ -72,10 +72,11 @@ public class CotacaoRepository {
                     Cotacao novo = new Cotacao();
                     novo.setOrcamento(nunota);
                     novo.setQuantidade(rset.getBigDecimal("QUANTIDADE"));
-                    novo.setDiameInterno(rset.getDouble("DIAINTER"));
+                    novo.setDiameInterno(new BigDecimal(rset.getDouble("DIAINTER")));
                     novo.setDiameExterno(rset.getDouble("DIAEXTER"));
                     novo.setPartname(rset.getBigDecimal("PARTNAME"));
-
+                    novo.setOrcamento(rset.getBigDecimal("NUNOTA"));
+                    novo.setNumeroOS(rset.getBigDecimal("ID"));
                     agrupamentoMap.put(chave, novo);
                 } else {
                     // Já existe: concatena o número da OS
@@ -109,6 +110,7 @@ public class CotacaoRepository {
                     .set("CODPROD", cotacao.getCodProduto())
                     .set("DESCR", cotacao.getDescricao())
                     .set("QTD", cotacao.getQuantidade())
+                    .set("NUNOTA", cotacao.getOrcamento())
                     .set("DIAMEINTER", cotacao.getDiameInterno())
                     .set("CODOS", cotacao.getNumeroOS())
                     .set("PARTNAME", cotacao.getPartname())
