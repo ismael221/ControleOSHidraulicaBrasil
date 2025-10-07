@@ -53,12 +53,18 @@ public class EventDecisaoPartname implements EventoProgramavelJava {
             servicosService.inserirServico(os, codPartname, substituicao);
         }
 
-        if (decisao != null && decisao.compareTo(new BigDecimal(1)) == 0) {
-            System.out.println("Decisao: " + decisao);
-            System.out.println("OS: " + os);
-            System.out.println("CodPartname: " + codPartname);
-            controleOsRepository.atualizarStatusOSByPK(os, StatusOS.PERITAGEM_EM_ANDAMENTO.getCodigo());
+        if (decisao != null) {
+            System.out.println("Decisão atual: " + decisao);
+            if (decisao.compareTo(BigDecimal.ONE) > 0) {
+                System.out.println("Executando atualização da OS...");
+                controleOsRepository.atualizarStatusOSByPK(os, StatusOS.PERITAGEM_EM_ANDAMENTO.getCodigo());
+            } else {
+                System.out.println("Decisão <= 1, nenhuma ação executada.");
+            }
+        } else {
+            System.out.println("Decisão é null!");
         }
+
 
     }
 
