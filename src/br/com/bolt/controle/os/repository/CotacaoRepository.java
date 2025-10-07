@@ -76,7 +76,9 @@ public class CotacaoRepository {
                     novo.setDiameExterno(rset.getDouble("DIAEXTER"));
                     novo.setPartname(rset.getBigDecimal("PARTNAME"));
                     novo.setOrcamento(rset.getBigDecimal("NUNOTA"));
+                    novo.setDescricao(rset.getString("DESCR"));
                     novo.setNumeroOS(rset.getBigDecimal("ID"));
+                    novo.setOss(rset.getString("NUOS"));
                     agrupamentoMap.put(chave, novo);
                 } else {
                     // Já existe: concatena o número da OS
@@ -108,7 +110,7 @@ public class CotacaoRepository {
             JapeWrapper cotacaoDAO = JapeFactory.dao("AD_COTACAOOS");
             DynamicVO save = cotacaoDAO.create()
                     .set("CODPROD", cotacao.getCodProduto())
-                    .set("DESCR", cotacao.getDescricao())
+                    .set("DESCR", cotacao.getDescricao().toCharArray())
                     .set("QTD", cotacao.getQuantidade())
                     .set("NUNOTA", cotacao.getOrcamento())
                     .set("DIAMEINTER", cotacao.getDiameInterno())
