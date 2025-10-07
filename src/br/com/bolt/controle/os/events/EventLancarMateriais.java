@@ -1,6 +1,7 @@
 package br.com.bolt.controle.os.events;
 
 import br.com.bolt.controle.os.repository.MaterialRepository;
+import br.com.bolt.controle.os.repository.PartnameRepository;
 import br.com.bolt.controle.os.service.MaterialService;
 import br.com.sankhya.extensions.eventoprogramavel.EventoProgramavelJava;
 import br.com.sankhya.jape.event.PersistenceEvent;
@@ -31,13 +32,15 @@ public class EventLancarMateriais implements EventoProgramavelJava {
         System.out.println("EventLancarMateriais::afterInsert");
         DynamicVO servicoVo = (DynamicVO) event.getVo();
         MaterialService materialService = new MaterialService();
+        PartnameRepository partnameRepository = new PartnameRepository();
         BigDecimal codOs = servicoVo.asBigDecimal("ID") != null ? servicoVo.asBigDecimal("ID") : BigDecimal.ZERO;
         BigDecimal codServ = servicoVo.asBigDecimal("CODSERV") != null ? servicoVo.asBigDecimal("CODSERV") : BigDecimal.ZERO;
         BigDecimal codPartname = servicoVo.asBigDecimal("CODPARTNAME") != null ? servicoVo.asBigDecimal("CODPARTNAME") : BigDecimal.ZERO;
         BigDecimal codProduto = servicoVo.asBigDecimal("CODPROD") != null ? servicoVo.asBigDecimal("CODPROD") : BigDecimal.ZERO;
-        String descricao = "Peça para substituir o partname []";
+        String descricao = "Peça para substituir o partname " + partnameRepository.resgatarNomePartname(codPartname, codOs);
 
         if (codProduto.compareTo(new BigDecimal(24)) == 0) {
+
             materialService.inserirMaterial(codOs, codPartname, codServ, descricao);
         }
     }

@@ -136,4 +136,51 @@ public class PartnameRepository {
 
         return componentes;
     }
+
+    public String resgatarNomePartname(BigDecimal partname, BigDecimal codOs) {
+        JdbcWrapper jdbc = null;
+        NativeSql sql = null;
+        ResultSet rset = null;
+        String nome = "";
+
+        try {
+            hnd = JapeSession.open();
+            hnd.setFindersMaxRows(-1);
+            EntityFacade entity = EntityFacadeFactory.getDWFFacade();
+            jdbc = entity.getJdbcWrapper();
+            jdbc.openSession();
+
+            sql = new NativeSql(jdbc);
+
+            sql.appendSql("SELECT \n" +
+                    "PART.PARTNAME,\n" +
+                    "GRU.DESCRGRUPOPROD \n" +
+                    "FROM TGFGRU GRU\n" +
+                    "LEFT JOIN AD_PARTNAME PART\n" +
+                    "ON PART.PARTNAME=GRU.CODGRUPOPROD\n" +
+                    "WHERE PART.CODPARTNAME = :PARTNAME\n" +
+                    "AND PART.ID = :CODOS");
+
+            sql.setNamedParameter("PARTNAME", partname);
+            sql.setNamedParameter("CODOS", codOs);
+
+            rset = sql.executeQuery();
+
+            if (rset.next()) {
+                nome = rset.getString("DESCRGRUPOPROD");
+            }
+
+
+        } catch (Exception e) {
+            Utils.logarErro(e);
+        } finally {
+            JdbcUtils.closeResultSet(rset);
+            NativeSql.releaseResources(sql);
+            JdbcWrapper.closeSession(jdbc);
+            JapeSession.close(hnd);
+
+        }
+
+        return nome;
+    }
 }
