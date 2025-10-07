@@ -35,44 +35,6 @@ public class ServicosRepository {
         }
     }
 
-    public BigDecimal encontrarPkServicos(BigDecimal codOs, BigDecimal codPartname) {
-        JdbcWrapper jdbc = null;
-        NativeSql sql = null;
-        ResultSet rset = null;
-        BigDecimal pkServico = BigDecimal.ZERO;
-
-        try {
-            hnd = JapeSession.open();
-            hnd.setFindersMaxRows(-1);
-            EntityFacade entity = EntityFacadeFactory.getDWFFacade();
-            jdbc = entity.getJdbcWrapper();
-            jdbc.openSession();
-
-            sql = new NativeSql(jdbc);
-
-            sql.appendSql("SELECT NVL(MAX(CODSERV),0) + 1 AS PRIMARYKEY FROM AD_SERVICOS WHERE ID = :CODOS AND CODPARTNAME = :CODPARTNAME");
-
-            sql.setNamedParameter("CODOS", codOs);
-            sql.setNamedParameter("CODPARTNAME", codPartname);
-
-            rset = sql.executeQuery();
-
-            if (rset.next()) {
-                pkServico = rset.getBigDecimal("PRIMARYKEY");
-            }
-
-        } catch (Exception e) {
-            Utils.logarErro(e);
-        } finally {
-            JdbcUtils.closeResultSet(rset);
-            NativeSql.releaseResources(sql);
-            JdbcWrapper.closeSession(jdbc);
-            JapeSession.close(hnd);
-        }
-        return pkServico;
-
-    }
-
     public BigDecimal resgatarServicoDoPartname(BigDecimal partname) {
         System.out.println("Procurando serviço para o partname: " + partname);
         JdbcWrapper jdbc = null;

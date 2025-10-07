@@ -1,6 +1,7 @@
 package br.com.bolt.controle.os.events;
 
 import br.com.bolt.controle.os.repository.MaterialRepository;
+import br.com.bolt.controle.os.service.MaterialService;
 import br.com.sankhya.extensions.eventoprogramavel.EventoProgramavelJava;
 import br.com.sankhya.jape.event.PersistenceEvent;
 import br.com.sankhya.jape.event.TransactionContext;
@@ -29,7 +30,7 @@ public class EventLancarMateriais implements EventoProgramavelJava {
     public void afterInsert(PersistenceEvent event) throws Exception {
         System.out.println("EventLancarMateriais::afterInsert");
         DynamicVO servicoVo = (DynamicVO) event.getVo();
-        MaterialRepository materialRepository = new MaterialRepository();
+        MaterialService materialService = new MaterialService();
         BigDecimal codOs = servicoVo.asBigDecimal("ID") != null ? servicoVo.asBigDecimal("ID") : BigDecimal.ZERO;
         BigDecimal codServ = servicoVo.asBigDecimal("CODSERV") != null ? servicoVo.asBigDecimal("CODSERV") : BigDecimal.ZERO;
         BigDecimal codPartname = servicoVo.asBigDecimal("CODPARTNAME") != null ? servicoVo.asBigDecimal("CODPARTNAME") : BigDecimal.ZERO;
@@ -37,7 +38,7 @@ public class EventLancarMateriais implements EventoProgramavelJava {
         String descricao = "Peça para substituir o partname []";
 
         if (codProduto.compareTo(new BigDecimal(24)) == 0) {
-            materialRepository.lancarMaterial(codOs, codPartname, codServ, descricao);
+            materialService.inserirMaterial(codOs, codPartname, codServ, descricao);
         }
     }
 
