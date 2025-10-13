@@ -26,6 +26,15 @@ public class OrdemDeServico {
     public String chassi;
     public String frota;
     public String numeroPedido;
+    public BigDecimal vendedor;
+
+    public BigDecimal getVendedor() {
+        return vendedor;
+    }
+
+    public void setVendedor(BigDecimal vendedor) {
+        this.vendedor = vendedor;
+    }
 
     public String getChassi() {
         return chassi;
@@ -237,6 +246,7 @@ public class OrdemDeServico {
                 ", chassi='" + chassi + '\'' +
                 ", frota='" + frota + '\'' +
                 ", numeroPedido='" + numeroPedido + '\'' +
+                ", vendedor=" + vendedor +
                 '}';
     }
 }

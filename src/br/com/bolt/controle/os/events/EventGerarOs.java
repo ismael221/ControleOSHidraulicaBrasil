@@ -53,6 +53,7 @@ public class EventGerarOs implements EventoProgramavelJava {
         String frota = cabecalhoVO.asString("AD_NRFROTA");
         String nuPedido = cabecalhoVO.asString("NUMPEDIDO2");
         BigDecimal equipamento = cabecalhoVO.asBigDecimal("AD_IDEQUIP");
+        BigDecimal vendedor = cabecalhoVO.asBigDecimal("CODVEND");
 
         System.out.println("Vai gerar OS no afterUpdate");
         System.out.println("Nunota: " + nunota);
@@ -64,6 +65,7 @@ public class EventGerarOs implements EventoProgramavelJava {
         System.out.println("Frota: " + frota);
         System.out.println("NuPedido: " + nuPedido);
         System.out.println("Equipamento: " + equipamento);
+        System.out.println("Vendedor: " + vendedor);
 
 
         if (numNota != null && numNota.compareTo(BigDecimal.ZERO) > 0 && codtipOper.compareTo(new BigDecimal("1000")) == 0) {
@@ -78,6 +80,7 @@ public class EventGerarOs implements EventoProgramavelJava {
                 ordemDeServico.setFrota(frota);
                 ordemDeServico.setNumeroPedido(nuPedido);
                 ordemDeServico.setEquipamento(equipamento);
+                ordemDeServico.setVendedor(vendedor);
                 BigDecimal idOs = ordemDeServicoRepository.salvarOrdensDeServico(ordemDeServico);
                 HistoricoOs historicoOs = new HistoricoOs();
                 historicoOs.setIdOS(idOs);
