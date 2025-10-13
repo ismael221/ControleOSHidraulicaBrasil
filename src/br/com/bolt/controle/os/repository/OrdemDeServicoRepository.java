@@ -91,6 +91,7 @@ public class OrdemDeServicoRepository {
                     .set("CHASSI", ordemDeServico.getChassi())
                     .set("FROTA", ordemDeServico.getFrota())
                     .set("NUPEDIDO", ordemDeServico.getNumeroPedido())
+                    .set("CODEQUIP", ordemDeServico.getEquipamento())
                     .set("REVISAO", BigDecimal.ZERO)
                     .save();
 
