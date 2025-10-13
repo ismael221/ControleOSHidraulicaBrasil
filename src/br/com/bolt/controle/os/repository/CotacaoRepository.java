@@ -1,5 +1,6 @@
 package br.com.bolt.controle.os.repository;
 
+import br.com.bolt.controle.os.model.AgrupadoDTO;
 import br.com.bolt.controle.os.model.MaterialCotacaoDTO;
 import br.com.bolt.controle.os.util.Utils;
 import br.com.sankhya.jape.EntityFacade;
@@ -7,6 +8,8 @@ import br.com.sankhya.jape.core.JapeSession;
 import br.com.sankhya.jape.core.JapeSession.SessionHandle;
 import br.com.sankhya.jape.dao.JdbcWrapper;
 import br.com.sankhya.jape.sql.NativeSql;
+import br.com.sankhya.jape.vo.DynamicVO;
+import br.com.sankhya.jape.vo.EntityVO;
 import br.com.sankhya.modelcore.util.EntityFacadeFactory;
 import com.sankhya.util.JdbcUtils;
 
@@ -78,5 +81,19 @@ public class CotacaoRepository {
         }
 
         return lista;
+    }
+
+    public void salvarMaterialCotacao(AgrupadoDTO dto, BigDecimal codcotacao) {
+        try {
+            EntityFacade dwfFacade = EntityFacadeFactory.getDWFFacade();
+            DynamicVO materialCotacaoVO = (DynamicVO) dwfFacade.getDefaultValueObjectInstance("AD_MATERIALCOTACAO");
+            materialCotacaoVO.setProperty("CODCOT", codcotacao);
+            materialCotacaoVO.setProperty("OSS", String.join(",", dto.getNuos()).toCharArray());
+            materialCotacaoVO.setProperty("QTD", dto.getQuantidade());
+            materialCotacaoVO.setProperty("PARTNAME", BigDecimal.ZERO);
+            dwfFacade.createEntity("AD_MATERIALCOTACAO", (EntityVO) materialCotacaoVO);
+        } catch (Exception e) {
+            Utils.logarErro(e);
+        }
     }
 }

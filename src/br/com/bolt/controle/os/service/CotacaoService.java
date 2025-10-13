@@ -3,6 +3,8 @@ package br.com.bolt.controle.os.service;
 import br.com.bolt.controle.os.model.AgrupadoDTO;
 import br.com.bolt.controle.os.model.MaterialCotacaoDTO;
 import br.com.bolt.controle.os.repository.CotacaoRepository;
+import br.com.bolt.controle.os.util.Utils;
+import br.com.sankhya.jape.core.JapeSession;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -10,9 +12,11 @@ import java.util.stream.Collectors;
 
 public class CotacaoService {
 
+    JapeSession.SessionHandle hnd = null;
+
     private final CotacaoRepository cotacaoRepository = new CotacaoRepository();
 
-    public void inserirMaterialCotacoes(BigDecimal nunota) {
+    public void inserirMaterialCotacoes(BigDecimal nunota, BigDecimal codCot) {
         List<MaterialCotacaoDTO> materiais = cotacaoRepository.buscarItensParaCotacao(nunota);
 
         // Agrupa por CODPARTNAME
@@ -37,8 +41,16 @@ public class CotacaoService {
         List<AgrupadoDTO> resultado = new ArrayList<>(agrupado.values());
 
         // Exemplo de saída
-        for (AgrupadoDTO dto : resultado) {
-            System.out.println(dto);
+        try {
+            hnd = JapeSession.open();
+            for (AgrupadoDTO dto : resultado) {
+                System.out.println(dto);
+                cotacaoRepository.salvarMaterialCotacao(dto, codCot);
+            }
+        } catch (Exception e) {
+            Utils.logarErro(e);
+        } finally {
+            JapeSession.close(hnd);
         }
     }
 

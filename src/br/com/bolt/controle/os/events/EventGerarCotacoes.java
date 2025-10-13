@@ -28,10 +28,13 @@ public class EventGerarCotacoes implements EventoProgramavelJava {
     public void afterInsert(PersistenceEvent event) throws Exception {
         DynamicVO cotacaoVO = (DynamicVO) event.getVo();
         BigDecimal nunota = cotacaoVO.asBigDecimal("NUNOTA");
+        BigDecimal codCota = cotacaoVO.asBigDecimal("CODCOT");
+        System.out.println("COTACAO: " + codCota);
+        System.out.println("NUNOTA: " + nunota);
         CotacaoService cotacaoService = new CotacaoService();
 
         if (nunota != null) {
-            cotacaoService.inserirMaterialCotacoes(nunota);
+            cotacaoService.inserirMaterialCotacoes(nunota, codCota);
         }
 
     }
