@@ -10,7 +10,17 @@ public class AgrupadoDTO {
     private String descr;
     private String unidade;
     private BigDecimal quantidade;
+    private BigDecimal partname;
     private Set<String> nuos;
+
+
+    public BigDecimal getPartname() {
+        return partname;
+    }
+
+    public void setPartname(BigDecimal partname) {
+        this.partname = partname;
+    }
 
     public BigDecimal getCodPartname() {
         return codPartname;
@@ -53,11 +63,12 @@ public class AgrupadoDTO {
     }
 
     public AgrupadoDTO(BigDecimal codPartname, String descr, String unidade,
-                       BigDecimal quantidade, Set<String> nuos) {
+                       BigDecimal partname,BigDecimal quantidade, Set<String> nuos) {
         this.codPartname = codPartname;
         this.descr = descr;
         this.unidade = unidade;
         this.quantidade = quantidade;
+        this.partname = partname;
         this.nuos = nuos;
     }
 

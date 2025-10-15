@@ -27,6 +27,7 @@ public class CotacaoService {
                                 m.getCodPartname(),
                                 m.getDescr(),
                                 m.getUnidade(),
+                                m.getPartname(),
                                 m.getQuantidade(),
                                 new HashSet<>(Collections.singleton(m.getNuos()))
                         ),

@@ -40,7 +40,8 @@ public class CotacaoRepository {
             sql.appendSql("SELECT \n" +
                     "C.NUOS,\n" +
                     "M.ID,\n" +
-                    "M.CODPARTNAME,\n" +
+                    "P.PARTNAME,\n" +
+                    "P.CODPARTNAME, \n" +
                     "M.CODSERV,\n" +
                     "M.SEQMAT,\n" +
                     "M.QUANTIDADE,\n" +
@@ -54,6 +55,9 @@ public class CotacaoRepository {
                     "FROM AD_MATERIAIS M\n" +
                     "JOIN AD_CONTROLEOS C\n" +
                     "  ON M.ID = C.ID\n" +
+                    "JOIN AD_PARTNAME P\n" +
+                    "  ON P.CODPARTNAME=M.CODPARTNAME\n" +
+                    "AND P.ID=C.ID\n" +
                     "WHERE C.NUNOTA = :NUNOTA\n");
 
             sql.setNamedParameter("NUNOTA", nunota);
@@ -65,6 +69,7 @@ public class CotacaoRepository {
                 dto.setNuos(rset.getString("NUOS"));
                 dto.setDescr(rset.getString("DESCR"));
                 dto.setQuantidade(rset.getBigDecimal("QUANTIDADE"));
+                dto.setPartname(rset.getBigDecimal("PARTNAME"));
                 dto.setCodProd(rset.getBigDecimal("CODPRODUTO"));
                 dto.setCodPartname(rset.getBigDecimal("CODPARTNAME"));
                 lista.add(dto);
@@ -90,7 +95,8 @@ public class CotacaoRepository {
             materialCotacaoVO.setProperty("CODCOT", codcotacao);
             materialCotacaoVO.setProperty("OSS", String.join(",", dto.getNuos()).toCharArray());
             materialCotacaoVO.setProperty("QTD", dto.getQuantidade());
-            materialCotacaoVO.setProperty("PARTNAME", BigDecimal.ZERO);
+            materialCotacaoVO.setProperty("DESCR", dto.getDescr());
+            materialCotacaoVO.setProperty("PARTNAME", dto.getPartname());
             dwfFacade.createEntity("AD_MATERIALCOTACAO", (EntityVO) materialCotacaoVO);
         } catch (Exception e) {
             Utils.logarErro(e);

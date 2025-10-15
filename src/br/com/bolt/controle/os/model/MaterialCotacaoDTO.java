@@ -10,8 +10,16 @@ public class MaterialCotacaoDTO {
     private BigDecimal codPartname;
     private BigDecimal quantidade;
     private String descr;
+    private BigDecimal partname;
     private String unidade;
 
+    public BigDecimal getPartname() {
+        return partname;
+    }
+
+    public void setPartname(BigDecimal partname) {
+        this.partname = partname;
+    }
 
     public BigDecimal getCodPartname() {
         return codPartname;
@@ -75,8 +83,10 @@ public class MaterialCotacaoDTO {
                 "nuos='" + nuos + '\'' +
                 ", id=" + id +
                 ", codProd=" + codProd +
+                ", codPartname=" + codPartname +
                 ", quantidade=" + quantidade +
                 ", descr='" + descr + '\'' +
+                ", partname=" + partname +
                 ", unidade='" + unidade + '\'' +
                 '}';
     }
