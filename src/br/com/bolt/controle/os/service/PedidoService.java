@@ -2,6 +2,7 @@ package br.com.bolt.controle.os.service;
 
 import br.com.bolt.controle.os.model.HistoricoMovimento;
 import br.com.bolt.controle.os.model.PedidoCompra;
+import br.com.bolt.controle.os.model.PedidoRequisicao;
 import br.com.bolt.controle.os.repository.HistoricoMovimentoRepository;
 import br.com.bolt.controle.os.util.Utils;
 import br.com.sankhya.jape.EntityFacade;
@@ -21,7 +22,7 @@ public class PedidoService {
 
     public static AuthenticationInfo authInfo;
 
-    public BigDecimal gerarPedido(PedidoCompra pedidoCompra, BigDecimal idOs) {
+    public void gerarPedido(PedidoCompra pedidoCompra, BigDecimal idOs) {
         HistoricoMovimentoRepository historicoMovimentoRepository = new HistoricoMovimentoRepository();
         System.out.println("Iniciando o pedido");
         BigDecimal nunota = BigDecimal.ZERO;
@@ -78,6 +79,7 @@ public class PedidoService {
                     Timestamp.from(Instant.now()),
                     pedidoCompra.getTipMov(),
                     pedidoCompra.getCodTipOper(),
+                    nunota,
                     pedidoCompra.getVlrTotal()
             );
 
@@ -87,6 +89,74 @@ public class PedidoService {
         } catch (Exception e) {
             Utils.logarErro(e);
         }
-        return nunota;
+    }
+
+    public void gerarPedidoRequisicao(PedidoRequisicao pedidoRequisicao, BigDecimal idOs) {
+        HistoricoMovimentoRepository historicoMovimentoRepository = new HistoricoMovimentoRepository();
+        System.out.println("Iniciando o pedido");
+        BigDecimal nunota = BigDecimal.ZERO;
+        EntityFacade dwf = EntityFacadeFactory.getDWFFacade();
+        authInfo = new AuthenticationInfo("SUP", BigDecimal.ZERO, BigDecimal.ZERO, 0);
+        try {
+            DynamicVO novoCabVO = (DynamicVO) dwf.getDefaultValueObjectInstance("CabecalhoNota");
+
+            System.out.println("CODTIPOPER: " + pedidoRequisicao.getCodTipOper());
+            novoCabVO.setProperty("CODTIPOPER", pedidoRequisicao.getCodTipOper());
+
+            System.out.println("CODUSUINC: " + pedidoRequisicao.getCodUsu());
+            novoCabVO.setProperty("CODUSUINC", pedidoRequisicao.getCodUsu());
+
+            System.out.println("CODEMP: " + pedidoRequisicao.getCodEmp());
+            novoCabVO.setProperty("CODEMP", pedidoRequisicao.getCodEmp());
+
+            System.out.println("CODPARC: " + pedidoRequisicao.getCodParc());
+            novoCabVO.setProperty("CODPARC", pedidoRequisicao.getCodParc());
+
+            System.out.println("NUMNOTA: " + BigDecimal.ZERO);
+            novoCabVO.setProperty("NUMNOTA", BigDecimal.ZERO);
+
+            System.out.println("CODTIPVENDA: " + pedidoRequisicao.getCodTipVenda());
+            novoCabVO.setProperty("CODTIPVENDA", pedidoRequisicao.getCodTipVenda());
+
+            System.out.println("CODCENCUS: " + pedidoRequisicao.getCodCenCus());
+            novoCabVO.setProperty("CODCENCUS", pedidoRequisicao.getCodCenCus());
+
+            System.out.println("CODNAT: " + pedidoRequisicao.getCodNat());
+            novoCabVO.setProperty("CODNAT", pedidoRequisicao.getCodNat());
+
+            Timestamp agora = new Timestamp(System.currentTimeMillis());
+            System.out.println("DTNEG: " + agora);
+            novoCabVO.setProperty("DTNEG", agora);
+
+            System.out.println("TIPMOV:" + pedidoRequisicao.getTipMov());
+            novoCabVO.setProperty("TIPMOV", pedidoRequisicao.getTipMov());
+
+
+            PrePersistEntityState cabPreState = PrePersistEntityState.build(dwf, "CabecalhoNota", novoCabVO, null, null);
+
+            JapeSessionContext.putProperty("br.com.sankhya.com.CentralCompraVenda", Boolean.TRUE);
+
+            CACHelper cacHelper = new CACHelper();
+            BarramentoRegra bRegrasCab = cacHelper.incluirAlterarCabecalho(authInfo, cabPreState);
+
+            DynamicVO newCabVO = bRegrasCab.getState().getNewVO();
+            nunota = newCabVO.asBigDecimal("NUNOTA");
+            System.out.println("nunota: " + nunota);
+
+            HistoricoMovimento historicoMovimento = new HistoricoMovimento(
+                    idOs,
+                    Timestamp.from(Instant.now()),
+                    pedidoRequisicao.getTipMov(),
+                    pedidoRequisicao.getCodTipOper(),
+                    nunota,
+                    pedidoRequisicao.getVlrTotal()
+            );
+
+            historicoMovimentoRepository.salvarMovimento(historicoMovimento);
+
+            System.out.println("Cabeçalho criado com sucesso. NUNOTA: " + nunota);
+        } catch (Exception e) {
+            Utils.logarErro(e);
+        }
     }
 }

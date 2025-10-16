@@ -20,10 +20,11 @@ public class HistoricoMovimentoRepository {
             hnd = JapeSession.open();
             JapeWrapper histMovDAO = JapeFactory.dao("AD_HISTMOVOS");
             DynamicVO save = histMovDAO.create()
-                    .set("ID",historicoMovimento.getIdOs())
+                    .set("ID", historicoMovimento.getIdOs())
                     .set("DTNEG", historicoMovimento.getDtNeg())
                     .set("TIPMOV", historicoMovimento.getTipMov())
                     .set("CODTIPOPER", historicoMovimento.getCodTipoOper())
+                    .set("NUNOTA", historicoMovimento.getNunota())
                     .set("VLRNOTA", historicoMovimento.getVlrNota())
                     .save();
 

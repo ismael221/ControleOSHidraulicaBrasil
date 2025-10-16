@@ -9,7 +9,17 @@ public class HistoricoMovimento {
     private Timestamp dtNeg;
     private String tipMov;
     private BigDecimal codTipoOper;
+    private BigDecimal nunota;
     private Double vlrNota;
+
+    public HistoricoMovimento(BigDecimal idOs, Timestamp dtNeg, String tipMov, BigDecimal codTipoOper, BigDecimal nunota, Double vlrNota) {
+        this.idOs = idOs;
+        this.dtNeg = dtNeg;
+        this.tipMov = tipMov;
+        this.codTipoOper = codTipoOper;
+        this.nunota = nunota;
+        this.vlrNota = vlrNota;
+    }
 
     public HistoricoMovimento(BigDecimal idOs, Timestamp dtNeg, String tipMov, BigDecimal codTipoOper, Double vlrNota) {
         this.idOs = idOs;
@@ -59,6 +69,14 @@ public class HistoricoMovimento {
         this.vlrNota = vlrNota;
     }
 
+    public BigDecimal getNunota() {
+        return nunota;
+    }
+
+    public void setNunota(BigDecimal nunota) {
+        this.nunota = nunota;
+    }
+
     @Override
     public String toString() {
         return "HistoricoMovimento{" +
@@ -66,6 +84,7 @@ public class HistoricoMovimento {
                 ", dtNeg=" + dtNeg +
                 ", tipMov='" + tipMov + '\'' +
                 ", codTipoOper=" + codTipoOper +
+                ", nunota=" + nunota +
                 ", vlrNota=" + vlrNota +
                 '}';
     }

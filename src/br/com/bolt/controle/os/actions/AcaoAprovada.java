@@ -3,6 +3,7 @@ package br.com.bolt.controle.os.actions;
 import br.com.bolt.controle.os.enums.StatusOS;
 import br.com.bolt.controle.os.model.Partname;
 import br.com.bolt.controle.os.model.PedidoCompra;
+import br.com.bolt.controle.os.model.PedidoRequisicao;
 import br.com.bolt.controle.os.repository.ControleOsRepository;
 import br.com.bolt.controle.os.service.PartnameService;
 import br.com.bolt.controle.os.service.PedidoService;
@@ -59,6 +60,17 @@ public class AcaoAprovada implements AcaoRotinaJava {
             pedidoCompra.setCodParc(codParc);
             pedidoCompra.setTipMov("P");
             pedidoService.gerarPedido(pedidoCompra,codOs);
+
+
+            PedidoRequisicao pedidoRequisicao = new PedidoRequisicao();
+            pedidoRequisicao.setCodCenCus(BigDecimal.ZERO);
+            pedidoRequisicao.setCodEmp(BigDecimal.ONE);
+            pedidoRequisicao.setCodTipOper(new BigDecimal(1801));
+            pedidoRequisicao.setCodUsu(BigDecimal.ZERO);
+            pedidoRequisicao.setCodTipVenda(new BigDecimal(13));
+            pedidoRequisicao.setCodParc(codParc);
+            pedidoRequisicao.setTipMov("J");
+            pedidoService.gerarPedidoRequisicao(pedidoRequisicao,codOs);
         }
     }
 }
