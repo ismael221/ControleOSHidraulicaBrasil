@@ -12,8 +12,17 @@ public class PedidoCompra {
     public BigDecimal codTipVenda;
     public BigDecimal codCenCus;
     public BigDecimal codNat;
+    public Double vlrTotal;
     public String tipMov;
     public List<ItemNota> itensNota;
+
+    public Double getVlrTotal() {
+        return vlrTotal;
+    }
+
+    public void setVlrTotal(Double vlrTotal) {
+        this.vlrTotal = vlrTotal;
+    }
 
     public BigDecimal getCodTipOper() {
         return codTipOper;
@@ -97,6 +106,7 @@ public class PedidoCompra {
                 ", codTipVenda=" + codTipVenda +
                 ", codCenCus=" + codCenCus +
                 ", codNat=" + codNat +
+                ", vlrTotal=" + vlrTotal +
                 ", tipMov='" + tipMov + '\'' +
                 ", itensNota=" + itensNota +
                 '}';

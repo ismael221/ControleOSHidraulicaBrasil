@@ -2,8 +2,10 @@ package br.com.bolt.controle.os.actions;
 
 import br.com.bolt.controle.os.enums.StatusOS;
 import br.com.bolt.controle.os.model.Partname;
+import br.com.bolt.controle.os.model.PedidoCompra;
 import br.com.bolt.controle.os.repository.ControleOsRepository;
 import br.com.bolt.controle.os.service.PartnameService;
+import br.com.bolt.controle.os.service.PedidoService;
 import br.com.sankhya.extensions.actionbutton.AcaoRotinaJava;
 import br.com.sankhya.extensions.actionbutton.ContextoAcao;
 import br.com.sankhya.extensions.actionbutton.Registro;
@@ -18,10 +20,12 @@ public class AcaoAprovada implements AcaoRotinaJava {
         Registro[] linhas = contexto.getLinhas();
         ControleOsRepository controleOsRepository = new ControleOsRepository();
         PartnameService partnameService = new PartnameService();
+        PedidoService pedidoService = new PedidoService();
 
         for (Registro linha : linhas) {
             BigDecimal codOs = (BigDecimal) linha.getCampo("ID");
             String nuOs = (String) linha.getCampo("NUOS");
+            BigDecimal codParc =  (BigDecimal) linha.getCampo("CODPARC");
 
             controleOsRepository.atualizarStatusOSByPK(codOs, StatusOS.APROVADA.getCodigo());
 
@@ -45,6 +49,16 @@ public class AcaoAprovada implements AcaoRotinaJava {
                     controleOsRepository.atualizarStatusEreprovarOs(revisao, StatusOS.FECHADA_APROVADA_EM_OUTRA_REVISAO.getCodigo());
                 }
             }
+
+            PedidoCompra pedidoCompra = new PedidoCompra();
+            pedidoCompra.setCodCenCus(BigDecimal.ZERO);
+            pedidoCompra.setCodEmp(BigDecimal.ONE);
+            pedidoCompra.setCodTipOper(new BigDecimal(1001));
+            pedidoCompra.setCodUsu(BigDecimal.ZERO);
+            pedidoCompra.setCodTipVenda(new BigDecimal(13));
+            pedidoCompra.setCodParc(codParc);
+            pedidoCompra.setTipMov("P");
+            pedidoService.gerarPedido(pedidoCompra,codOs);
         }
     }
 }

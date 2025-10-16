@@ -1,6 +1,9 @@
 package br.com.bolt.controle.os.service;
 
+import br.com.bolt.controle.os.model.HistoricoMovimento;
 import br.com.bolt.controle.os.model.PedidoCompra;
+import br.com.bolt.controle.os.repository.HistoricoMovimentoRepository;
+import br.com.bolt.controle.os.util.Utils;
 import br.com.sankhya.jape.EntityFacade;
 import br.com.sankhya.jape.util.JapeSessionContext;
 import br.com.sankhya.jape.vo.DynamicVO;
@@ -12,12 +15,14 @@ import br.com.sankhya.modelcore.util.EntityFacadeFactory;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.time.Instant;
 
 public class PedidoService {
 
     public static AuthenticationInfo authInfo;
 
-    public BigDecimal gerarPedido(PedidoCompra pedidoCompra) {
+    public BigDecimal gerarPedido(PedidoCompra pedidoCompra, BigDecimal idOs) {
+        HistoricoMovimentoRepository historicoMovimentoRepository = new HistoricoMovimentoRepository();
         System.out.println("Iniciando o pedido");
         BigDecimal nunota = BigDecimal.ZERO;
         EntityFacade dwf = EntityFacadeFactory.getDWFFacade();
@@ -53,8 +58,8 @@ public class PedidoService {
             System.out.println("DTNEG: " + agora);
             novoCabVO.setProperty("DTNEG", agora);
 
-            System.out.println("TIPMOV: O");
-            novoCabVO.setProperty("TIPMOV", "O");
+            System.out.println("TIPMOV:" + pedidoCompra.getTipMov());
+            novoCabVO.setProperty("TIPMOV", pedidoCompra.getTipMov());
 
 
             PrePersistEntityState cabPreState = PrePersistEntityState.build(dwf, "CabecalhoNota", novoCabVO, null, null);
@@ -68,9 +73,19 @@ public class PedidoService {
             nunota = newCabVO.asBigDecimal("NUNOTA");
             System.out.println("nunota: " + nunota);
 
+            HistoricoMovimento historicoMovimento = new HistoricoMovimento(
+                    idOs,
+                    Timestamp.from(Instant.now()),
+                    pedidoCompra.getTipMov(),
+                    pedidoCompra.getCodTipOper(),
+                    pedidoCompra.getVlrTotal()
+            );
+
+            historicoMovimentoRepository.salvarMovimento(historicoMovimento);
+
             System.out.println("Cabeçalho criado com sucesso. NUNOTA: " + nunota);
         } catch (Exception e) {
-
+            Utils.logarErro(e);
         }
         return nunota;
     }
