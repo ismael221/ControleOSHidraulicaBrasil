@@ -6,7 +6,7 @@ public class Componente {
 
     public BigDecimal codProd;
     public BigDecimal codComponente;
-    public Double quantidade;
+    public BigDecimal quantidade;
     public String unidade;
 
     public BigDecimal getCodComponente() {
@@ -17,11 +17,11 @@ public class Componente {
         this.codComponente = codComponente;
     }
 
-    public Double getQuantidade() {
+    public BigDecimal getQuantidade() {
         return quantidade;
     }
 
-    public void setQuantidade(Double quantidade) {
+    public void setQuantidade(BigDecimal quantidade) {
         this.quantidade = quantidade;
     }
 

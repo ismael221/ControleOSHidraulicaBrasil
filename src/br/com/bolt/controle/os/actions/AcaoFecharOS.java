@@ -2,9 +2,10 @@ package br.com.bolt.controle.os.actions;
 
 import br.com.bolt.controle.os.enums.StatusOS;
 import br.com.bolt.controle.os.model.Componente;
-import br.com.bolt.controle.os.repository.ComponentesRepository;
+import br.com.bolt.controle.os.repository.ComposicaoRepository;
 import br.com.bolt.controle.os.repository.ControleOsRepository;
 import br.com.bolt.controle.os.repository.PartnameRepository;
+import br.com.bolt.controle.os.util.Utils;
 import br.com.sankhya.extensions.actionbutton.AcaoRotinaJava;
 import br.com.sankhya.extensions.actionbutton.ContextoAcao;
 import br.com.sankhya.extensions.actionbutton.Registro;
@@ -18,18 +19,23 @@ public class AcaoFecharOS implements AcaoRotinaJava {
         Registro[] linhas = contexto.getLinhas();
         ControleOsRepository controleOsRepository = new ControleOsRepository();
         PartnameRepository partnameRepository = new PartnameRepository();
-        ComponentesRepository componentesRepository = new ComponentesRepository();
+        ComposicaoRepository composicaoRepository = new ComposicaoRepository();
 
         for (Registro linha : linhas) {
             BigDecimal codOs = (BigDecimal) linha.getCampo("ID");
             BigDecimal codProd = (BigDecimal) linha.getCampo("CODITEM");
             controleOsRepository.atualizarStatusOSByPK(codOs, StatusOS.FECHADA.getCodigo());
             List<Componente> componenteList = partnameRepository.gerarComponentesDoPartname(codOs);
-            for (Componente componente : componenteList) {
-                componente.setCodProd(codProd);
-                componentesRepository.salvarComponente(componente);
+            if (codProd != null && codProd.compareTo(BigDecimal.ZERO) != 0) {
+                for (Componente componente : componenteList) {
+                    componente.setCodProd(codProd);
+                    composicaoRepository.salvarComponente(componente);
+                }
+            } else {
+                System.out.println("Código do produto inválido: " + codProd);
+                // ou lançar exceção:
+                // throw new IllegalArgumentException("Código do produto inválido: " + codProd);
             }
-
         }
     }
 }

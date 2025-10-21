@@ -118,7 +118,7 @@ public class PartnameRepository {
             while (rset.next()) {
                 Componente componente = new Componente();
                 componente.setCodComponente(rset.getBigDecimal("CODPROD"));
-                componente.setQuantidade(Double.valueOf(String.valueOf(rset.getBigDecimal("QTD"))));
+                componente.setQuantidade(rset.getBigDecimal("QTD"));
                 componente.setUnidade("UN");
                 componentes.add(componente);
             }
