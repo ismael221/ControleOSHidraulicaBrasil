@@ -108,7 +108,7 @@ public class PartnameRepository {
 
             sql = new NativeSql(jdbc);
 
-            sql.appendSql("SELECT CODPROD,QTD FROM AD_PARTNAME WHERE ID = :CODOS");
+            sql.appendSql("SELECT PARTNAME,CODPROD,QTD FROM AD_PARTNAME WHERE ID = :CODOS");
 
             sql.setNamedParameter("CODOS", codOS);
 
@@ -118,6 +118,7 @@ public class PartnameRepository {
             while (rset.next()) {
                 Componente componente = new Componente();
                 componente.setCodComponente(rset.getBigDecimal("CODPROD"));
+                componente.setPartname(rset.getBigDecimal("PARTNAME"));
                 componente.setQuantidade(rset.getBigDecimal("QTD"));
                 componente.setUnidade("UN");
                 componentes.add(componente);

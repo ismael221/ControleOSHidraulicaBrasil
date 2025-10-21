@@ -21,7 +21,8 @@ public class ComposicaoRepository {
             EntityFacade dwfFacade = EntityFacadeFactory.getDWFFacade();
             DynamicVO composicaoVO = (DynamicVO) dwfFacade.getDefaultValueObjectInstance("AD_COMPOSICAO");
             composicaoVO.setProperty("CODPROD", componente.getCodProd());
-            composicaoVO.setProperty("CODPARTNAME", componente.getCodComponente());
+            composicaoVO.setProperty("CODPARTNUMBER", componente.getCodComponente());
+            composicaoVO.setProperty("PARTNAME", componente.getPartname());
             composicaoVO.setProperty("QTD", componente.getQuantidade());
             dwfFacade.createEntity("AD_COMPOSICAO", (EntityVO) composicaoVO);
         } catch (Exception e) {

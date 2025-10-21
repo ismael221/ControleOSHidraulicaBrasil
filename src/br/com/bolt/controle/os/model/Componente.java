@@ -6,8 +6,17 @@ public class Componente {
 
     public BigDecimal codProd;
     public BigDecimal codComponente;
+    public BigDecimal partname;
     public BigDecimal quantidade;
     public String unidade;
+
+    public BigDecimal getPartname() {
+        return partname;
+    }
+
+    public void setPartname(BigDecimal partname) {
+        this.partname = partname;
+    }
 
     public BigDecimal getCodComponente() {
         return codComponente;
@@ -46,6 +55,7 @@ public class Componente {
         return "Componente{" +
                 "codProd=" + codProd +
                 ", codComponente=" + codComponente +
+                ", partname=" + partname +
                 ", quantidade=" + quantidade +
                 ", unidade='" + unidade + '\'' +
                 '}';
