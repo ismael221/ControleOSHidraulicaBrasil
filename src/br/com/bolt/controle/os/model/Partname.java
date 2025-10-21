@@ -6,6 +6,8 @@ public class Partname {
 
     public BigDecimal partname;
     public BigDecimal ordem;
+    public BigDecimal codOs;
+    public BigDecimal codPartname;
     public BigDecimal quantidade;
     public BigDecimal decisao;
     public BigDecimal codProduto;
@@ -59,11 +61,29 @@ public class Partname {
         this.codProduto = codProduto;
     }
 
+    public BigDecimal getCodOs() {
+        return codOs;
+    }
+
+    public void setCodOs(BigDecimal codOs) {
+        this.codOs = codOs;
+    }
+
+    public BigDecimal getCodPartname() {
+        return codPartname;
+    }
+
+    public void setCodPartname(BigDecimal codPartname) {
+        this.codPartname = codPartname;
+    }
+
     @Override
     public String toString() {
         return "Partname{" +
                 "partname=" + partname +
                 ", ordem=" + ordem +
+                ", codOs=" + codOs +
+                ", codPartname=" + codPartname +
                 ", quantidade=" + quantidade +
                 ", decisao=" + decisao +
                 ", codProduto=" + codProduto +

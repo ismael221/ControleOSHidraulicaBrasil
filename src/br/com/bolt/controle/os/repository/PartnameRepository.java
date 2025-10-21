@@ -107,7 +107,7 @@ public class PartnameRepository {
 
             sql = new NativeSql(jdbc);
 
-            sql.appendSql("SELECT PARTNAME,CODPROD,QTD FROM AD_PARTNAME WHERE ID = :CODOS");
+            sql.appendSql("SELECT ID,CODPARTNAME,PARTNAME,CODPROD,QTD FROM AD_PARTNAME WHERE ID = :CODOS");
 
             sql.setNamedParameter("CODOS", codOs);
 
@@ -116,6 +116,8 @@ public class PartnameRepository {
 
             while (rset.next()) {
                 Partname partname = new Partname();
+                partname.setCodPartname(rset.getBigDecimal("CODPARTNAME"));
+                partname.setCodOs(rset.getBigDecimal("ID"));
                 partname.setPartname(rset.getBigDecimal("PARTNAME"));
                 partname.setCodProduto(rset.getBigDecimal("CODPROD"));
                 partname.setQuantidade(rset.getBigDecimal("QTD"));
@@ -227,5 +229,36 @@ public class PartnameRepository {
         }
 
         return nome;
+    }
+
+    public void atualizarProdutoDoPartname(Partname partname) {
+        JdbcWrapper jdbc = null;
+        NativeSql sql = null;
+
+        try {
+            hnd = JapeSession.open();
+            hnd.setFindersMaxRows(-1);
+            EntityFacade entity = EntityFacadeFactory.getDWFFacade();
+            jdbc = entity.getJdbcWrapper();
+            jdbc.openSession();
+
+            sql = new NativeSql(jdbc);
+
+            sql.appendSql("UPDATE AD_PARTNAME SET CODPROD = :CODPROD WHERE ID=:CODOS AND CODPARTNAME = :CODPARTNAME");
+
+            sql.setNamedParameter("CODPROD", partname.getCodProduto());
+            sql.setNamedParameter("CODOS", partname.getCodOs());
+            sql.setNamedParameter("CODPARTNAME", partname.getCodPartname());
+
+            sql.executeUpdate();
+
+        } catch (Exception e) {
+            Utils.logarErro(e);
+        } finally {
+            NativeSql.releaseResources(sql);
+            JdbcWrapper.closeSession(jdbc);
+            JapeSession.close(hnd);
+
+        }
     }
 }
