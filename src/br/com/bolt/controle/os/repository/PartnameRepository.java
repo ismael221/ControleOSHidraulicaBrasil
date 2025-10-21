@@ -92,6 +92,50 @@ public class PartnameRepository {
         return partnames;
     }
 
+    public List<Partname> encontrarPartnamesPorOs(BigDecimal codOs) {
+        JdbcWrapper jdbc = null;
+        NativeSql sql = null;
+        ResultSet rset = null;
+        List<Partname> partnames = new ArrayList<>();
+
+        try {
+            hnd = JapeSession.open();
+            hnd.setFindersMaxRows(-1);
+            EntityFacade entity = EntityFacadeFactory.getDWFFacade();
+            jdbc = entity.getJdbcWrapper();
+            jdbc.openSession();
+
+            sql = new NativeSql(jdbc);
+
+            sql.appendSql("SELECT PARTNAME,CODPROD,QTD FROM AD_PARTNAME WHERE ID = :CODOS");
+
+            sql.setNamedParameter("CODOS", codOs);
+
+
+            rset = sql.executeQuery();
+
+            while (rset.next()) {
+                Partname partname = new Partname();
+                partname.setPartname(rset.getBigDecimal("PARTNAME"));
+                partname.setCodProduto(rset.getBigDecimal("CODPROD"));
+                partname.setQuantidade(rset.getBigDecimal("QTD"));
+                partnames.add(partname);
+            }
+
+
+        } catch (Exception e) {
+            Utils.logarErro(e);
+        } finally {
+            JdbcUtils.closeResultSet(rset);
+            NativeSql.releaseResources(sql);
+            JdbcWrapper.closeSession(jdbc);
+            JapeSession.close(hnd);
+
+        }
+
+        return partnames;
+    }
+
     public List<Componente> gerarComponentesDoPartname(BigDecimal codOS) {
         System.out.println("Gerando componentes do partname " + codOS);
         JdbcWrapper jdbc = null;

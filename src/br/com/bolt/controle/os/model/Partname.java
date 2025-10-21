@@ -8,6 +8,7 @@ public class Partname {
     public BigDecimal ordem;
     public BigDecimal quantidade;
     public BigDecimal decisao;
+    public BigDecimal codProduto;
 
     public Partname(BigDecimal partname, BigDecimal ordem, BigDecimal quantidade, BigDecimal decisao) {
         this.partname = partname;
@@ -50,6 +51,14 @@ public class Partname {
         this.decisao = decisao;
     }
 
+    public BigDecimal getCodProduto() {
+        return codProduto;
+    }
+
+    public void setCodProduto(BigDecimal codProduto) {
+        this.codProduto = codProduto;
+    }
+
     @Override
     public String toString() {
         return "Partname{" +
@@ -57,6 +66,7 @@ public class Partname {
                 ", ordem=" + ordem +
                 ", quantidade=" + quantidade +
                 ", decisao=" + decisao +
+                ", codProduto=" + codProduto +
                 '}';
     }
 }
