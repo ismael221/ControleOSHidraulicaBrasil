@@ -28,8 +28,11 @@ public class AcaoImprimirAvaliacaoTecnica implements AcaoRotinaJava {
         try {
             EntityFacade dwfFacade = EntityFacadeFactory.getDWFFacade();
 
-            AgendamentoRelatorioHelper.ParametroRelatorio pk = new AgendamentoRelatorioHelper.ParametroRelatorio("PK_NUNOTA", BigDecimal.class.getName(), regs[0].getCampo("NUNOTA"));
+            AgendamentoRelatorioHelper.ParametroRelatorio pk = new AgendamentoRelatorioHelper.ParametroRelatorio("IDOS", String.class.getName(), String.valueOf(regs[0].getCampo("ID")));
+            AgendamentoRelatorioHelper.ParametroRelatorio logo = new AgendamentoRelatorioHelper.ParametroRelatorio("PDIR_MODELO", String.class.getName(), "/home/mgeweb/repositorio/System/Imagens/");
+
             lstParam.add(pk);
+            lstParam.add(logo);
 
             pdfBytes = AgendamentoRelatorioHelper.getPrintableReport(nuRfe, lstParam, contexto.getUsuarioLogado(), dwfFacade);
 
