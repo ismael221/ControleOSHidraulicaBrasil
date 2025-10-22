@@ -16,7 +16,7 @@ import java.util.List;
 public class AcaoImprimirOrcamento implements AcaoRotinaJava {
     @Override
     public void doAction(ContextoAcao contexto) throws Exception {
-        BigDecimal nuRfe = new BigDecimal(177);
+        BigDecimal nuRfe = new BigDecimal(179);
         List<Object> lstParam = new ArrayList<Object>();
         byte[] pdfBytes = null;
         String chave = "chave.pdf";
@@ -29,7 +29,10 @@ public class AcaoImprimirOrcamento implements AcaoRotinaJava {
             EntityFacade dwfFacade = EntityFacadeFactory.getDWFFacade();
 
             AgendamentoRelatorioHelper.ParametroRelatorio pk = new AgendamentoRelatorioHelper.ParametroRelatorio("PK_NUNOTA", BigDecimal.class.getName(), regs[0].getCampo("NUNOTA"));
+            AgendamentoRelatorioHelper.ParametroRelatorio logo = new AgendamentoRelatorioHelper.ParametroRelatorio("PDIR_MODELO", String.class.getName(), "/home/mgeweb/repositorio/System/Imagens/");
+
             lstParam.add(pk);
+            lstParam.add(logo);
 
             pdfBytes = AgendamentoRelatorioHelper.getPrintableReport(nuRfe, lstParam, contexto.getUsuarioLogado(), dwfFacade);
 
