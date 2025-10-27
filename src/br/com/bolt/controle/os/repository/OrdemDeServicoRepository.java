@@ -54,6 +54,7 @@ public class OrdemDeServicoRepository {
                     ordemDeServico.setOficina(rset.getBigDecimal("AD_OFICINAITEM"));
                     ordemDeServico.setOrcamento(rset.getBigDecimal("NUNOTA"));
                     ordemDeServico.setDescricaoParaNota(rset.getString("OBSERVACAO"));
+                    ordemDeServico.setServicoNota(rset.getBigDecimal("CODPROD"));
                     ordemDeServico.setStatusOS(BigDecimal.ONE);
                     ordemDeServicos.add(ordemDeServico);
                     quantidade = quantidade.subtract(BigDecimal.ONE);
@@ -93,6 +94,7 @@ public class OrdemDeServicoRepository {
                     .set("NUPEDIDO", ordemDeServico.getNumeroPedido())
                     .set("CODEQUIP", ordemDeServico.getEquipamento())
                     .set("VENDEDOR", ordemDeServico.getVendedor())
+                    .set("SERVICONOTA", ordemDeServico.getServicoNota())
                     .set("REVISAO", BigDecimal.ZERO)
                     .save();
 

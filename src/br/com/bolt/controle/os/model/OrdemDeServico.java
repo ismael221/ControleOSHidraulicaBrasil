@@ -27,6 +27,15 @@ public class OrdemDeServico {
     public String frota;
     public String numeroPedido;
     public BigDecimal vendedor;
+    public BigDecimal servicoNota;
+
+    public BigDecimal getServicoNota() {
+        return servicoNota;
+    }
+
+    public void setServicoNota(BigDecimal servicoNota) {
+        this.servicoNota = servicoNota;
+    }
 
     public BigDecimal getVendedor() {
         return vendedor;
@@ -247,6 +256,7 @@ public class OrdemDeServico {
                 ", frota='" + frota + '\'' +
                 ", numeroPedido='" + numeroPedido + '\'' +
                 ", vendedor=" + vendedor +
+                ", servicoNota=" + servicoNota +
                 '}';
     }
 }
