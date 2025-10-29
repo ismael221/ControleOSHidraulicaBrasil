@@ -13,11 +13,11 @@ public class AcaoPrecificarPartname implements AcaoRotinaJava {
         Registro[] linhas = contexto.getLinhas();
         PrecificacaoPartanameService service = new PrecificacaoPartanameService();
         for (Registro linha : linhas) {
-            BigDecimal tipNota = (BigDecimal) linha.getCampo("TIPNOTA");
+            String tipNota = (String) linha.getCampo("TIPNOTA");
             BigDecimal codOs = (BigDecimal) linha.getCampo("ID");
             BigDecimal codPartname = (BigDecimal) linha.getCampo("CODPARTNAME");
 
-            service.atualizarPrecosPartname(Integer.parseInt(tipNota.toString()), codOs, codPartname);
+            service.atualizarPrecosPartname(Integer.parseInt(tipNota), codOs, codPartname);
         }
     }
 }
