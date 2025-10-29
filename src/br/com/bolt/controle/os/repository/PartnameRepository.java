@@ -4,6 +4,7 @@ import br.com.bolt.controle.os.model.Componente;
 import br.com.bolt.controle.os.model.Partname;
 import br.com.bolt.controle.os.util.Utils;
 import br.com.sankhya.jape.EntityFacade;
+import br.com.sankhya.jape.PersistenceException;
 import br.com.sankhya.jape.bmp.PersistentLocalEntity;
 import br.com.sankhya.jape.core.JapeSession;
 import br.com.sankhya.jape.dao.JdbcWrapper;
@@ -45,7 +46,6 @@ public class PartnameRepository {
 
         return retorno;
     }
-
 
     public List<Partname> encontrarPartnames(BigDecimal macrogrupo) {
         JdbcWrapper jdbc = null;
@@ -260,5 +260,20 @@ public class PartnameRepository {
             JapeSession.close(hnd);
 
         }
+    }
+
+    public void atualizarPrecoPartname(Partname partname) throws Exception {
+        System.out.println("PartnameRepository::atualizarPrecoPartname inicio");
+        EntityFacade dwfFacade = EntityFacadeFactory.getDWFFacade();
+        PersistentLocalEntity adPartname = dwfFacade.findEntityByPrimaryKey("AD_PARTNAME", new Object[]{partname.getCodOs(), partname.getPartname()});
+        DynamicVO partnameVO = (DynamicVO) adPartname.getValueObject();
+        partnameVO.setProperty("TAXAADICIONALSERV", partname.getTaxaAdicionalServico());
+        partnameVO.setProperty("CUSTOTSERV", partname.getCustoTotalServico());
+        partnameVO.setProperty("VLRTOTVENDA", partname.getTotalVenda());
+        partnameVO.setProperty("TOTVENDASERV", partname.getTotalVendaServico());
+        partnameVO.setProperty("TOTVENDAMAT", partname.getTotalVendaMaterial());
+
+        adPartname.setValueObject((EntityVO) partnameVO);
+        System.out.println("PartnameRepository::atualizarPrecoPartname finalizado");
     }
 }

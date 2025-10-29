@@ -11,6 +11,11 @@ public class Partname {
     public BigDecimal quantidade;
     public BigDecimal decisao;
     public BigDecimal codProduto;
+    public Double taxaAdicionalServico;
+    public Double totalVendaMaterial;
+    public Double totalVendaServico;
+    public Double custoTotalServico;
+    public Double totalVenda;
 
     public Partname(BigDecimal partname, BigDecimal ordem, BigDecimal quantidade, BigDecimal decisao) {
         this.partname = partname;
@@ -19,7 +24,8 @@ public class Partname {
         this.decisao = decisao;
     }
 
-    public Partname() {}
+    public Partname() {
+    }
 
     public BigDecimal getQuantidade() {
         return quantidade;
@@ -77,6 +83,46 @@ public class Partname {
         this.codPartname = codPartname;
     }
 
+    public Double getTaxaAdicionalServico() {
+        return taxaAdicionalServico;
+    }
+
+    public void setTaxaAdicionalServico(Double taxaAdicionalServico) {
+        this.taxaAdicionalServico = taxaAdicionalServico;
+    }
+
+    public Double getTotalVendaMaterial() {
+        return totalVendaMaterial;
+    }
+
+    public void setTotalVendaMaterial(Double totalVendaMaterial) {
+        this.totalVendaMaterial = totalVendaMaterial;
+    }
+
+    public Double getTotalVendaServico() {
+        return totalVendaServico;
+    }
+
+    public void setTotalVendaServico(Double totalVendaServico) {
+        this.totalVendaServico = totalVendaServico;
+    }
+
+    public Double getCustoTotalServico() {
+        return custoTotalServico;
+    }
+
+    public void setCustoTotalServico(Double custoTotalServico) {
+        this.custoTotalServico = custoTotalServico;
+    }
+
+    public Double getTotalVenda() {
+        return totalVenda;
+    }
+
+    public void setTotalVenda(Double totalVenda) {
+        this.totalVenda = totalVenda;
+    }
+
     @Override
     public String toString() {
         return "Partname{" +
@@ -87,6 +133,11 @@ public class Partname {
                 ", quantidade=" + quantidade +
                 ", decisao=" + decisao +
                 ", codProduto=" + codProduto +
+                ", taxaAdicionalServico=" + taxaAdicionalServico +
+                ", totalVendaMaterial=" + totalVendaMaterial +
+                ", totalVendaServico=" + totalVendaServico +
+                ", custoTotalServico=" + custoTotalServico +
+                ", totalVenda=" + totalVenda +
                 '}';
     }
 }

@@ -54,4 +54,16 @@ public class PartnameService {
 
         return retorno;
     }
+
+    public void atualizarPrecos(Partname partname) {
+        System.out.println("Service::atualizarPrecos " + partname.toString());
+        try {
+            hnd = JapeSession.open();
+            partnameRepository.atualizarPrecoPartname(partname);
+        } catch (Exception e) {
+            Utils.logarErro(e);
+        } finally {
+            JapeSession.close(hnd);
+        }
+    }
 }
