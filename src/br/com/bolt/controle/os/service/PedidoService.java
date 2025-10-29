@@ -1,8 +1,6 @@
 package br.com.bolt.controle.os.service;
 
-import br.com.bolt.controle.os.model.HistoricoMovimento;
-import br.com.bolt.controle.os.model.PedidoCompra;
-import br.com.bolt.controle.os.model.PedidoRequisicao;
+import br.com.bolt.controle.os.model.*;
 import br.com.bolt.controle.os.repository.HistoricoMovimentoRepository;
 import br.com.bolt.controle.os.util.Utils;
 import br.com.sankhya.jape.EntityFacade;
@@ -17,6 +15,8 @@ import br.com.sankhya.modelcore.util.EntityFacadeFactory;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PedidoService {
 
@@ -158,5 +158,28 @@ public class PedidoService {
         } catch (Exception e) {
             Utils.logarErro(e);
         }
+    }
+
+    public void inserirItensNoPedido(BigDecimal nunota, List<ItemNota> itensNota) throws Exception {
+        EntityFacade dwf = EntityFacadeFactory.getDWFFacade();
+        CACHelper cacHelper = new CACHelper();
+        ArrayList<PrePersistEntityState> itensUnitario = new ArrayList<>();
+        BigDecimal sequencia = BigDecimal.ONE;
+
+        for (ItemNota item : itensNota) {
+            DynamicVO itemVO = (DynamicVO) dwf.getDefaultValueObjectInstance("ItemNota");
+            itemVO.setProperty("NUNOTA", nunota);
+            itemVO.setProperty("SEQUENCIA", sequencia);
+            itemVO.setProperty("CODPROD", item.getCodProd());
+            itemVO.setProperty("QTDNEG", item.getQtdNeg());
+            itemVO.setProperty("VLRUNIT", item.getVlrUnit());
+            itemVO.setProperty("VLRTOT", item.getVlrTotal());
+
+            PrePersistEntityState itemMontado = PrePersistEntityState.build(dwf, "ItemNota", itemVO);
+            itensUnitario.add(itemMontado);
+            sequencia = sequencia.add(BigDecimal.ONE);
+
+        }
+        cacHelper.incluirAlterarItem(nunota, authInfo, itensUnitario, true);
     }
 }
