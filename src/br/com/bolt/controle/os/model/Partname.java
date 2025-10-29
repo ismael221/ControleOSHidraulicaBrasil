@@ -16,6 +16,7 @@ public class Partname {
     public Double totalVendaServico;
     public Double custoTotalServico;
     public Double totalVenda;
+    public String tipNota;
 
     public Partname(BigDecimal partname, BigDecimal ordem, BigDecimal quantidade, BigDecimal decisao) {
         this.partname = partname;
@@ -123,6 +124,14 @@ public class Partname {
         this.totalVenda = totalVenda;
     }
 
+    public String getTipNota() {
+        return tipNota;
+    }
+
+    public void setTipNota(String tipNota) {
+        this.tipNota = tipNota;
+    }
+
     @Override
     public String toString() {
         return "Partname{" +
@@ -138,6 +147,7 @@ public class Partname {
                 ", totalVendaServico=" + totalVendaServico +
                 ", custoTotalServico=" + custoTotalServico +
                 ", totalVenda=" + totalVenda +
+                ", tipNota='" + tipNota + '\'' +
                 '}';
     }
 }

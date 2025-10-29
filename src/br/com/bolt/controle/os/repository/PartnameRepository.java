@@ -35,6 +35,7 @@ public class PartnameRepository {
             partnameVO.setProperty("DECISAO", partname.getDecisao());
             partnameVO.setProperty("QTD", partname.getQuantidade());
             partnameVO.setProperty("PARTNAME", partname.getPartname());
+            partnameVO.setProperty("TIPNOTA", "1");
 
             PersistentLocalEntity salvo = dwfFacade.createEntity("AD_PARTNAME", (EntityVO) partnameVO);
             DynamicVO salvoVO = (DynamicVO) salvo.getValueObject();
@@ -276,4 +277,6 @@ public class PartnameRepository {
         adPartname.setValueObject((EntityVO) partnameVO);
         System.out.println("PartnameRepository::atualizarPrecoPartname finalizado");
     }
+
+
 }

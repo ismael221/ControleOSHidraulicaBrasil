@@ -174,6 +174,7 @@ public class PedidoService {
             itemVO.setProperty("QTDNEG", item.getQtdNeg());
             itemVO.setProperty("VLRUNIT", item.getVlrUnit());
             itemVO.setProperty("VLRTOT", item.getVlrTotal());
+            itemVO.setProperty("OBSERVACAO",item.getDescricao());
 
             PrePersistEntityState itemMontado = PrePersistEntityState.build(dwf, "ItemNota", itemVO);
             itensUnitario.add(itemMontado);
