@@ -2,6 +2,7 @@ package br.com.bolt.controle.os.events;
 
 import br.com.bolt.controle.os.enums.StatusOS;
 import br.com.bolt.controle.os.repository.ControleOsRepository;
+import br.com.bolt.controle.os.repository.PartnameRepository;
 import br.com.bolt.controle.os.repository.ServicosRepository;
 import br.com.bolt.controle.os.service.ServicosService;
 import br.com.sankhya.extensions.eventoprogramavel.EventoProgramavelJava;
@@ -39,18 +40,20 @@ public class EventDecisaoPartname implements EventoProgramavelJava {
         BigDecimal decisao = partnameVO.asBigDecimal("DECISAO");
         BigDecimal os = partnameVO.asBigDecimal("ID");
         BigDecimal codPartname = partnameVO.asBigDecimal("CODPARTNAME");
-
+        String importado = partnameVO.asString("IMPORTASERVICO");
         BigDecimal substituicao = new BigDecimal(24);
 
 
         ServicosService servicosService = new ServicosService();
         ControleOsRepository controleOsRepository = new ControleOsRepository();
+        PartnameRepository partnameRepository = new PartnameRepository();
 
-        if (decisao != null && decisao.compareTo(new BigDecimal(2)) == 0) {
+        if (decisao != null && decisao.compareTo(new BigDecimal(2)) == 0 && (importado == null || importado.equals("N"))) {
             System.out.println("Decisao: " + decisao);
             System.out.println("OS: " + os);
             System.out.println("CodPartname: " + codPartname);
             servicosService.inserirServico(os, codPartname, substituicao);
+            partnameRepository.atualizarStatusInsercaoPartname(os, codPartname);
         }
 
         if (decisao != null) {

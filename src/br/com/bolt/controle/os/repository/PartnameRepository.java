@@ -11,6 +11,7 @@ import br.com.sankhya.jape.dao.JdbcWrapper;
 import br.com.sankhya.jape.sql.NativeSql;
 import br.com.sankhya.jape.vo.DynamicVO;
 import br.com.sankhya.jape.vo.EntityVO;
+import br.com.sankhya.jape.wrapper.JapeFactory;
 import br.com.sankhya.modelcore.util.EntityFacadeFactory;
 import com.sankhya.util.JdbcUtils;
 
@@ -46,6 +47,23 @@ public class PartnameRepository {
         }
 
         return retorno;
+    }
+
+    public void atualizarStatusInsercaoPartname(BigDecimal codOs, BigDecimal codPartname) {
+        JapeSession.SessionHandle hnd = null;
+        try {
+            hnd = JapeSession.open();
+
+            JapeFactory.dao("AD_PARTNAME")
+                    .prepareToUpdateByPK(codOs, codPartname)
+                    .set("IMPORTASERVICO", "S")
+                    .update();
+
+        } catch (Exception e) {
+            Utils.logarErro(e);
+        } finally {
+            JapeSession.close(hnd);
+        }
     }
 
     public List<Partname> encontrarPartnames(BigDecimal macrogrupo) {

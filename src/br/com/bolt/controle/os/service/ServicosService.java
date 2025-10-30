@@ -1,5 +1,6 @@
 package br.com.bolt.controle.os.service;
 
+import br.com.bolt.controle.os.repository.PartnameRepository;
 import br.com.bolt.controle.os.repository.ServicosRepository;
 import br.com.bolt.controle.os.util.Utils;
 import br.com.sankhya.jape.core.JapeSession;
