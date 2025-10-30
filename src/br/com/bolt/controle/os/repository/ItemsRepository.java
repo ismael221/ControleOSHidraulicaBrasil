@@ -97,4 +97,43 @@ public class ItemsRepository {
         }
         return precoServicosDoPartname;
     }
+
+    public BigDecimal pegarServicoOs(BigDecimal codOs) {
+
+        JdbcWrapper jdbc = null;
+        NativeSql sql = null;
+        ResultSet rset = null;
+        JapeSession.SessionHandle hnd = null;
+        BigDecimal servico = BigDecimal.ZERO;
+
+        try {
+            hnd = JapeSession.open();
+            hnd.setFindersMaxRows(-1);
+            EntityFacade entity = EntityFacadeFactory.getDWFFacade();
+            jdbc = entity.getJdbcWrapper();
+            jdbc.openSession();
+
+            sql = new NativeSql(jdbc);
+
+            sql.appendSql("SELECT SERVICONOTA FROM AD_CONTROLEOS WHERE ID = :CODOS");
+
+            sql.setNamedParameter("CODOS", codOs);
+
+            rset = sql.executeQuery();
+
+            if (rset.next()) {
+                servico = rset.getBigDecimal(1);
+            }
+
+        } catch (Exception e) {
+            Utils.logarErro(e);
+        } finally {
+            JdbcUtils.closeResultSet(rset);
+            NativeSql.releaseResources(sql);
+            JdbcWrapper.closeSession(jdbc);
+            JapeSession.close(hnd);
+
+        }
+        return servico;
+    }
 }

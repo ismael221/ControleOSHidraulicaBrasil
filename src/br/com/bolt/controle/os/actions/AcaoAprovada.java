@@ -1,10 +1,9 @@
 package br.com.bolt.controle.os.actions;
 
 import br.com.bolt.controle.os.enums.StatusOS;
-import br.com.bolt.controle.os.model.Partname;
-import br.com.bolt.controle.os.model.PedidoCompra;
-import br.com.bolt.controle.os.model.PedidoRequisicao;
+import br.com.bolt.controle.os.model.*;
 import br.com.bolt.controle.os.repository.ControleOsRepository;
+import br.com.bolt.controle.os.repository.ItemsRepository;
 import br.com.bolt.controle.os.service.PartnameService;
 import br.com.bolt.controle.os.service.PedidoService;
 import br.com.sankhya.extensions.actionbutton.AcaoRotinaJava;
@@ -22,11 +21,13 @@ public class AcaoAprovada implements AcaoRotinaJava {
         ControleOsRepository controleOsRepository = new ControleOsRepository();
         PartnameService partnameService = new PartnameService();
         PedidoService pedidoService = new PedidoService();
+        ItemsRepository itemsRepository = new ItemsRepository();
 
         for (Registro linha : linhas) {
             BigDecimal codOs = (BigDecimal) linha.getCampo("ID");
             String nuOs = (String) linha.getCampo("NUOS");
-            BigDecimal codParc =  (BigDecimal) linha.getCampo("CODPARC");
+            BigDecimal codParc = (BigDecimal) linha.getCampo("CODPARC");
+            String descNota = (String) linha.getCampo("DESCRNOTA");
 
             controleOsRepository.atualizarStatusOSByPK(codOs, StatusOS.APROVADA.getCodigo());
 
@@ -51,6 +52,20 @@ public class AcaoAprovada implements AcaoRotinaJava {
                 }
             }
 
+            List<ItemNota> itemNotaList = new ArrayList();
+
+            Double precoServico = itemsRepository.precoServicosDoPartname(codOs);
+
+            ItemNota itemServico = new ItemNota();
+            itemServico.setQtdNeg(1.0);
+            itemServico.setCodEmp(BigDecimal.ONE);
+            itemServico.setVlrUnit(precoServico);
+            itemServico.setVlrTotal(precoServico);
+            itemServico.setCodProd(new BigDecimal(26));
+            itemServico.setDescricao(descNota);
+            itemNotaList.add(itemServico);
+
+
             PedidoCompra pedidoCompra = new PedidoCompra();
             pedidoCompra.setCodCenCus(BigDecimal.ZERO);
             pedidoCompra.setCodEmp(BigDecimal.ONE);
@@ -59,7 +74,8 @@ public class AcaoAprovada implements AcaoRotinaJava {
             pedidoCompra.setCodTipVenda(new BigDecimal(13));
             pedidoCompra.setCodParc(codParc);
             pedidoCompra.setTipMov("P");
-            pedidoService.gerarPedido(pedidoCompra,codOs);
+            pedidoCompra.setItensNota(itemNotaList);
+            pedidoService.gerarPedido(pedidoCompra, codOs);
 
 
             PedidoRequisicao pedidoRequisicao = new PedidoRequisicao();
@@ -70,7 +86,8 @@ public class AcaoAprovada implements AcaoRotinaJava {
             pedidoRequisicao.setCodTipVenda(new BigDecimal(13));
             pedidoRequisicao.setCodParc(codParc);
             pedidoRequisicao.setTipMov("J");
-            pedidoService.gerarPedidoRequisicao(pedidoRequisicao,codOs);
+            pedidoRequisicao.setItensNota(itemNotaList);
+            pedidoService.gerarPedidoRequisicao(pedidoRequisicao, codOs);
         }
     }
 }

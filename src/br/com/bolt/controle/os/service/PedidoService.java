@@ -74,6 +74,14 @@ public class PedidoService {
             nunota = newCabVO.asBigDecimal("NUNOTA");
             System.out.println("nunota: " + nunota);
 
+            List<ItemNota> itensNota = pedidoCompra.getItensNota();
+            for (ItemNota itemNota : itensNota) {
+                itemNota.setNunota(nunota);
+                itemNota.setCodEmp(pedidoCompra.getCodEmp());
+            }
+
+            inserirItensNoPedido(nunota, itensNota);
+
             HistoricoMovimento historicoMovimento = new HistoricoMovimento(
                     idOs,
                     Timestamp.from(Instant.now()),
@@ -143,6 +151,15 @@ public class PedidoService {
             nunota = newCabVO.asBigDecimal("NUNOTA");
             System.out.println("nunota: " + nunota);
 
+
+            List<ItemNota> itensNota = pedidoRequisicao.getItensNota();
+            for (ItemNota itemNota : itensNota) {
+                itemNota.setNunota(nunota);
+                itemNota.setCodEmp(pedidoRequisicao.getCodEmp());
+            }
+
+            inserirItensNoPedido(nunota, itensNota);
+
             HistoricoMovimento historicoMovimento = new HistoricoMovimento(
                     idOs,
                     Timestamp.from(Instant.now()),
@@ -171,10 +188,10 @@ public class PedidoService {
             itemVO.setProperty("NUNOTA", nunota);
             itemVO.setProperty("SEQUENCIA", sequencia);
             itemVO.setProperty("CODPROD", item.getCodProd());
-            itemVO.setProperty("QTDNEG", item.getQtdNeg());
-            itemVO.setProperty("VLRUNIT", item.getVlrUnit());
-            itemVO.setProperty("VLRTOT", item.getVlrTotal());
-            itemVO.setProperty("OBSERVACAO",item.getDescricao());
+            itemVO.setProperty("QTDNEG", BigDecimal.valueOf(item.getQtdNeg()));
+            itemVO.setProperty("VLRUNIT", BigDecimal.valueOf(item.getVlrUnit()));
+            itemVO.setProperty("VLRTOT", BigDecimal.valueOf(item.getVlrTotal()));
+            itemVO.setProperty("OBSERVACAO", item.getDescricao());
 
             PrePersistEntityState itemMontado = PrePersistEntityState.build(dwf, "ItemNota", itemVO);
             itensUnitario.add(itemMontado);
