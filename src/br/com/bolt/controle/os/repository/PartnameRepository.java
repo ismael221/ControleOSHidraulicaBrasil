@@ -266,13 +266,13 @@ public class PartnameRepository {
     public void atualizarPrecoPartname(Partname partname) throws Exception {
         System.out.println("PartnameRepository::atualizarPrecoPartname inicio");
         EntityFacade dwfFacade = EntityFacadeFactory.getDWFFacade();
-        PersistentLocalEntity adPartname = dwfFacade.findEntityByPrimaryKey("AD_PARTNAME", new Object[]{partname.getCodOs(), partname.getPartname()});
+        PersistentLocalEntity adPartname = dwfFacade.findEntityByPrimaryKey("AD_PARTNAME", new Object[]{partname.getCodOs(), partname.getCodPartname()});
         DynamicVO partnameVO = (DynamicVO) adPartname.getValueObject();
-        partnameVO.setProperty("TAXAADICIONALSERV", partname.getTaxaAdicionalServico());
-        partnameVO.setProperty("CUSTOTSERV", partname.getCustoTotalServico());
-        partnameVO.setProperty("VLRTOTVENDA", partname.getTotalVenda());
-        partnameVO.setProperty("TOTVENDASERV", partname.getTotalVendaServico());
-        partnameVO.setProperty("TOTVENDAMAT", partname.getTotalVendaMaterial());
+        partnameVO.setProperty("TAXAADICIONALSERV", BigDecimal.valueOf(partname.getTaxaAdicionalServico()));
+        partnameVO.setProperty("CUSTOTSERV", BigDecimal.valueOf(partname.getCustoTotalServico()));
+        partnameVO.setProperty("VLRTOTVENDA", BigDecimal.valueOf(partname.getTotalVenda()));
+        partnameVO.setProperty("TOTVENDASERV", BigDecimal.valueOf(partname.getTotalVendaServico()));
+        partnameVO.setProperty("TOTVENDAMAT", BigDecimal.valueOf(partname.getTotalVendaMaterial()));
 
         adPartname.setValueObject((EntityVO) partnameVO);
         System.out.println("PartnameRepository::atualizarPrecoPartname finalizado");
