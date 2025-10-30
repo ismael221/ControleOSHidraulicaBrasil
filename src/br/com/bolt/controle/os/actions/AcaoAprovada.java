@@ -52,7 +52,7 @@ public class AcaoAprovada implements AcaoRotinaJava {
                 }
             }
 
-            List<ItemNota> itemNotaList = new ArrayList();
+            List<ItemNota> itemNotaList = itemsRepository.listaItemsNotaFiscal(codOs);
 
             Double precoServico = itemsRepository.precoServicosDoPartname(codOs);
 

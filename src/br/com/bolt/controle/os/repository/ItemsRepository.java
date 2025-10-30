@@ -13,17 +13,18 @@ import com.sankhya.util.JdbcUtils;
 
 import java.math.BigDecimal;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ItemsRepository {
 
-    public List<Item> listaItemsNotaFiscal(BigDecimal codOs) {
+    public List<ItemNota> listaItemsNotaFiscal(BigDecimal codOs) {
 
         JdbcWrapper jdbc = null;
         NativeSql sql = null;
         ResultSet rset = null;
         JapeSession.SessionHandle hnd = null;
-        List<Item> items = null;
+        List<ItemNota> items = new ArrayList<>();
 
         try {
             hnd = JapeSession.open();
@@ -34,7 +35,7 @@ public class ItemsRepository {
 
             sql = new NativeSql(jdbc);
 
-            sql.appendSql("SELECT CODPROD,QTD FROM AD_PARTNAME WHERE ID = :CODOS");
+            sql.appendSql("SELECT VLRTOTVENDA,CODPROD,QTD FROM AD_PARTNAME WHERE ID = :CODOS AND TIPNOTA = 2");
 
             sql.setNamedParameter("CODOS", codOs);
 
@@ -42,8 +43,15 @@ public class ItemsRepository {
 
             while (rset.next()) {
                 ItemNota item = new ItemNota();
+                Double qtd = Double.valueOf(String.valueOf(rset.getBigDecimal("QTD")));
+                Double vlrUnit = rset.getDouble("VLRTOTVENDA");
+                Double vlrTotal = vlrUnit * qtd;
                 item.setCodProd(rset.getBigDecimal("CODPROD"));
-                item.setQtdNeg(Double.valueOf(String.valueOf(rset.getBigDecimal("QTD"))));
+                item.setDescricao("");
+                item.setVlrUnit(vlrUnit);
+                item.setVlrTotal(vlrTotal);
+                item.setQtdNeg(qtd);
+                items.add(item);
             }
 
         } catch (Exception e) {
